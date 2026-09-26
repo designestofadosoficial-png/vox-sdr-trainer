@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Vox Sdr Trainer",
+  "schemaVersion": 1,
+  "description": "Ferramenta de treinamento SDR para a Marina (Vox2You) — simulação de ligação com IA respondendo como prospect, rastreamento das 7 etapas do roteiro, avaliação de ligações reais com estrelas por etapa, e histórico persistente."
+}
+</script>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDR Trainer — Vox2You</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+
+  .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 18px 24px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header p { font-size: 13px; color: #8892b0; margin-top: 3px; }
+
+  .tabs { display: flex; background: white; border-bottom: 2px solid #e8eaf0; padding: 0 24px; }
+  .tab { padding: 14px 20px; font-size: 14px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+  .tab.active { color: #7c3aed; border-bottom-color: #7c3aed; }
+  .tab:hover:not(.active) { color: #374151; }
+
+  .content { padding: 24px; max-width: 960px; margin: 0 auto; }
+
+  /* ── SIMULAÇÃO ── */
+  .sim-layout { display: grid; grid-template-columns: 1fr 260px; gap: 16px; height: calc(100vh - 200px); min-height: 500px; }
+
+  .chat-panel { background: white; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+  .chat-config { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .chat-config label { font-size: 12px; font-weight: 600; color: #6b7280; }
+  .chat-config select, .chat-config input { font-size: 13px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 10px; color: #1a1a2e; background: #f9fafb; }
+  .btn-start { background: #7c3aed; color: white; border: none; border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn-start:hover { background: #6d28d9; }
+  .btn-start.danger { background: #ef4444; }
+  .btn-start.danger:hover { background: #dc2626; }
+
+  .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 80%; display: flex; flex-direction: column; gap: 4px; }
+  .msg.marina { align-self: flex-end; }
+  .msg.prospect { align-self: flex-start; }
+  .msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
+  .msg.marina .msg-bubble { background: #7c3aed; color: white; border-bottom-right-radius: 4px; }
+  .msg.prospect .msg-bubble { background: #f0f2f5; color: #1a1a2e; border-bottom-left-radius: 4px; }
+  .msg-label { font-size: 11px; font-weight: 600; color: #9ca3af; }
+  .msg.marina .msg-label { text-align: right; }
+
+  .msg.system .msg-bubble { background: #fef3c7; color: #92400e; font-size: 13px; font-style: italic; border-radius: 8px; max-width: 100%; text-align: center; }
+  .msg.system { align-self: center; max-width: 90%; }
+
+  .chat-input { padding: 14px 16px; border-top: 1px solid #f0f0f0; display: flex; gap: 10px; }
+  .chat-input textarea { flex: 1; font-size: 14px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 14px; resize: none; font-family: inherit; line-height: 1.4; min-height: 48px; max-height: 120px; }
+  .chat-input textarea:focus { outline: none; border-color: #7c3aed; }
+  .btn-send { background: #7c3aed; color: white; border: none; border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; align-self: flex-end; }
+  .btn-send:hover { background: #6d28d9; }
+  .btn-send:disabled { background: #c4b5fd; cursor: not-allowed; }
+
+  /* Stage tracker */
+  .stage-panel { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+  .stage-panel h3 { font-size: 13px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .stage-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-radius: 8px; transition: background 0.2s; }
+  .stage-item.done { background: #f0fdf4; }
+  .stage-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+  .stage-item.done .stage-check { background: #22c55e; border-color: #22c55e; color: white; }
+  .stage-name { font-size: 13px; font-weight: 600; color: #374151; }
+  .stage-item.done .stage-name { color: #15803d; }
+  .stage-desc { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+  .score-box { background: #f9fafb; border-radius: 10px; padding: 14px; text-align: center; margin-top: auto; }
+  .score-num { font-size: 32px; font-weight: 800; color: #7c3aed; }
+  .score-label { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  .btn-feedback { width: 100%; margin-top: 10px; background: #1a1a2e; color: white; border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn-feedback:hover { background: #16213e; }
+
+  /* ── AVALIAÇÃO ── */
+  .eval-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .eval-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .eval-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+  .eval-meta { display: flex; flex-direction: column; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 12px; font-weight: 600; color: #6b7280; }
+  .field input, .field select, .field textarea { font-size: 14px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-family: inherit; color: #1a1a2e; background: #f9fafb; }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .stage-eval-list { display: flex; flex-direction: column; gap: 10px; }
+  .stage-eval-item { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+  .stage-eval-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .stage-eval-name { font-size: 14px; font-weight: 600; }
+  .stars { display: flex; gap: 4px; }
+  .star { font-size: 20px; cursor: pointer; color: #d1d5db; transition: color 0.15s; }
+  .star.active { color: #f59e0b; }
+  .stage-eval-note { width: 100%; font-size: 13px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px 10px; font-family: inherit; background: #f9fafb; resize: none; min-height: 40px; }
+
+  .btn-save { width: 100%; background: #7c3aed; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 16px; }
+  .btn-save:hover { background: #6d28d9; }
+
+  /* ── HISTÓRICO ── */
+  .hist-empty { text-align: center; padding: 60px 20px; color: #9ca3af; font-size: 15px; }
+  .hist-list { display: flex; flex-direction: column; gap: 12px; }
+  .hist-card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.2s; }
+  .hist-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .hist-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .hist-name { font-size: 16px; font-weight: 700; }
+  .hist-date { font-size: 12px; color: #9ca3af; }
+  .hist-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
+  .badge.green { background: #dcfce7; color: #15803d; }
+  .badge.yellow { background: #fef9c3; color: #a16207; }
+  .badge.red { background: #fee2e2; color: #dc2626; }
+  .badge.gray { background: #f3f4f6; color: #6b7280; }
+  .hist-score { font-size: 22px; font-weight: 800; color: #7c3aed; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+  .modal { background: white; border-radius: 16px; padding: 24px; max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  .modal-stage { padding: 10px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+  .modal-note { font-size: 13px; color: #6b7280; font-style: italic; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-close { flex: 1; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-delete { flex: 1; background: #fee2e2; color: #dc2626; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  .loading-dots { display: inline-flex; gap: 4px; padding: 10px 14px; }
+  .loading-dots span { width: 8px; height: 8px; border-radius: 50%; background: #9ca3af; animation: bounce 1.2s infinite; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0.8);opacity:0.5} 40%{transform:scale(1);opacity:1} }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎙️ SDR Trainer — Vox2You</h1>
+  <p>Simulação de ligação e avaliação de desempenho</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('sim')">📞 Simulação</div>
+  <div class="tab" onclick="switchTab('eval')">📋 Avaliar Ligação</div>
+  <div class="tab" onclick="switchTab('hist')">📊 Histórico</div>
+</div>
+
+<!-- ═══════════════ SIMULAÇÃO ═══════════════ -->
+<div id="tab-sim" class="content">
+  <div class="sim-layout">
+    <div class="chat-panel">
+      <div class="chat-config">
+        <label>Tipo:</label>
+        <select id="prospectType">
+          <option value="referido">Referido Indicado</option>
+          <option value="frio">Prospecção Fria</option>
+          <option value="resistente">Referido Resistente</option>
+          <option value="ocupado">Prospect Ocupado</option>
+        </select>
+        <label>Prospect:</label>
+        <input id="prospectName" type="text" placeholder="Nome" value="Ana" style="width:90px">
+        <label>Profissão:</label>
+        <input id="prospectProf" type="text" placeholder="Ex: Gerente comercial" value="Gerente comercial" style="width:140px">
+        <button class="btn-start" id="btnStart" onclick="startSession()">▶ Iniciar</button>
+        <button class="btn-start danger" id="btnEnd" onclick="endSession()" hidden>■ Encerrar</button>
+      </div>
+      <div class="messages" id="messages">
+        <div class="msg system"><div class="msg-bubble">Configure o perfil do prospect e clique em Iniciar para começar a simulação.</div></div>
+      </div>
+      <div class="chat-input">
+        <textarea id="userInput" placeholder="Digite o que você diria na ligação... (Enter para enviar)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
+        <button class="btn-send" id="btnSend" onclick="sendMessage()" disabled>Enviar</button>
+      </div>
+    </div>
+
+    <div class="stage-panel">
+      <h3>Etapas do Roteiro</h3>
+      <div id="stageList"></div>
+      <div class="score-box">
+        <div class="score-num" id="scoreNum">0/7</div>
+        <div class="score-label">etapas concluídas</div>
+        <button class="btn-feedback" onclick="getFeedback()" id="btnFeedback" hidden>💡 Ver Avaliação</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ AVALIAÇÃO ═══════════════ -->
+<div id="tab-eval" class="content" hidden>
+  <div class="eval-grid">
+    <div class="eval-card">
+      <h3>📝 Dados da Ligação</h3>
+      <div class="eval-meta">
+        <div class="field"><label>Nome do Prospect</label><input id="evalName" type="text" placeholder="Ex: Roberto Silva"></div>
+        <div class="field"><label>Profissão / Empresa</label><input id="evalProf" type="text" placeholder="Ex: Vendedor, Construtora ABC"></div>
+        <div class="field">
+          <label>Tipo de Contato</label>
+          <select id="evalType">
+            <option>Referido Indicado</option>
+            <option>Prospecção Fria</option>
+            <option>Follow-up</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Resultado</label>
+          <select id="evalResult">
+            <option>Consultoria marcada ✅</option>
+            <option>Follow-up agendado 📅</option>
+            <option>Sem interesse ❌</option>
+            <option>Não atendeu 📵</option>
+            <option>Ligação incompleta ⚠️</option>
+          </select>
+        </div>
+        <div class="field"><label>Observações Gerais</label><textarea id="evalObs" placeholder="O que funcionou bem? O que teria feito diferente?"></textarea></div>
+      </div>
+    </div>
+
+    <div class="eval-card">
+      <h3>⭐ Avalie cada etapa</h3>
+      <div class="stage-eval-list" id="stageEvalList"></div>
+      <button class="btn-save" onclick="saveEval()">💾 Salvar Avaliação</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HISTÓRICO ═══════════════ -->
+<div id="tab-hist" class="content" hidden>
+  <div id="histContainer"></div>
+</div>
+
+<!-- Modal de detalhe -->
+<div class="modal-overlay" id="modalOverlay" hidden onclick="closeModal(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const STAGES = [
+  { id: 'abertura',      name: '1. Abertura',         desc: 'Apresentação + permissão para falar',       keywords: ['quem pediu','ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece'] },
+  { id: 'rapport',       name: '2. Rapport / Indicação', desc: 'Mencionar indicador / criar conexão',     keywords: ['indicou','pediu para te ligar','falou de você','quem te indicou','pesquisa','3 minutos','objetivo não é esse'] },
+  { id: 'qualificacao',  name: '3. Qualificação',      desc: 'Profissão, contexto, perfil',               keywords: ['trabalha com','faz o que','profiss','área de atuação','o que você faz','me conta mais'] },
+  { id: 'spin',          name: '4. Dor & SPIN',        desc: 'Ansiedade, resultados, importância',        keywords: ['ansioso','apresentação','comunicação','resultado','expres','influên','1 a 10','poderia ter','negociação','reunião'] },
+  { id: 'pitch',         name: '5. Apresentação Vox',  desc: 'Maior rede, 90 mil alunos, método',         keywords: ['vox2you','90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático'] },
+  { id: 'marcacao',      name: '6. Marcação',          desc: 'Propor consultoria com dupla opção',        keywords: ['consultoria','20 minuto','40 minuto','tenho horário','quinta','sexta','online','presencial','escola','marcar','agenda'] },
+  { id: 'assentamento',  name: '7. Assentamento',      desc: 'Confirmar, comprometer, honrar palavra',    keywords: ['confirmando','travei minha agenda','honro minha palavra','posso contar','anota','envio a localização','whatsapp','até lá'] },
+];
+
+let sessionActive = false;
+let history = [];
+let stagesDone = new Set();
+let feedbackContent = '';
+
+// ── Init ──
+function init() {
+  renderStageList();
+  renderStageEvalList();
+  loadHistory();
+}
+
+function renderStageList() {
+  document.getElementById('stageList').innerHTML = STAGES.map(s => `
+    <div class="stage-item" id="stage-${s.id}">
+      <div class="stage-check" id="check-${s.id}"></div>
+      <div>
+        <div class="stage-name">${s.name}</div>
+        <div class="stage-desc">${s.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderStageEvalList() {
+  document.getElementById('stageEvalList').innerHTML = STAGES.map(s => `
+    <div class="stage-eval-item">
+      <div class="stage-eval-header">
+        <div class="stage-eval-name">${s.name}</div>
+        <div class="stars" id="stars-${s.id}">
+          <span class="star" onclick="setStar('${s.id}',1)">★</span>
+          <span class="star" onclick="setStar('${s.id}',2)">★</span>
+          <span class="star" onclick="setStar('${s.id}',3)">★</span>
+        </div>
+      </div>
+      <textarea class="stage-eval-note" id="note-${s.id}" placeholder="Nota rápida (opcional)..." rows="1"></textarea>
+    </div>`).join('');
+}
+
+// ── Tabs ──
+function switchTab(t) {
+  ['sim','eval','hist'].forEach(id => {
+    document.getElementById('tab-'+id).hidden = id !== t;
+    document.querySelectorAll('.tab')[['sim','eval','hist'].indexOf(id)].classList.toggle('active', id === t);
+  });
+  if (t === 'hist') renderHistory();
+}
+
+// ── Chat / Simulação ──
+async function startSession() {
+  sessionActive = true;
+  stagesDone.clear();
+  feedbackContent = '';
+  updateStageUI();
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('userInput').disabled = false;
+  document.getElementById('btnSend').disabled = false;
+  document.getElementById('btnStart').hidden = true;
+  document.getElementById('btnEnd').hidden = false;
+  document.getElementById('btnFeedback').hidden = true;
+
+  const type = document.getElementById('prospectType').value;
+  const name = document.getElementById('prospectName').value || 'Ana';
+  const prof = document.getElementById('prospectProf').value || 'profissional';
+
+  const intros = {
+    referido:   `O telefone tocou. ${name} atendeu — ela é ${prof}, foi indicada por um cliente seu. Ela parece receptiva mas não sabe quem você é.`,
+    frio:       `Você discou para ${name}, ${prof}. Ela atendeu com um "alô?" neutro. Não te conhece, não estava esperando sua ligação.`,
+    resistente: `${name} atendeu com um tom levemente impaciente: "Alô, pode falar rápido, tô em reunião logo."`,
+    ocupado:    `${name} atendeu mas já disse "tô correndo aqui, pode ser rápido?"`
+  };
+  addMsg('system', intros[type] || intros.referido);
+  document.getElementById('userInput').focus();
+}
+
+function endSession() {
+  sessionActive = false;
+  document.getElementById('userInput').disabled = true;
+  document.getElementById('btnSend').disabled = true;
+  document.getElementById('btnStart').hidden = false;
+  document.getElementById('btnEnd').hidden = true;
+  document.getElementById('btnFeedback').hidden = false;
+  addMsg('system', `Sessão encerrada. ${stagesDone.size}/7 etapas concluídas. Clique em "Ver Avaliação" para o feedback.`);
+}
+
+async function sendMessage() {
+  if (!sessionActive) return;
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  addMsg('marina', text);
+  detectStages(text);
+
+  // Loading
+  const loadId = 'load-' + Date.now();
+  const loadEl = document.createElement('div');
+  loadEl.className = 'msg prospect';
+  loadEl.id = loadId;
+  loadEl.innerHTML = `<div class="msg-label">${document.getElementById('prospectName').value || 'Prospect'}</div><div class="msg-bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('messages').appendChild(loadEl);
+  scrollChat();
+
+  const name = document.getElementById('prospectName').value || 'Ana';
+  const prof = document.getElementById('prospectProf').value || 'profissional';
+  const type = document.getElementById('prospectType').value;
+
+  const personas = {
+    referido:   `Você é ${name}, ${prof}. Você foi indicada por uma conhecida para a Vox2You. Está receptiva mas ocupada. Responda naturalmente — seja real, faça perguntas às vezes, mostre interesse moderado se a SDR for empática. Responda em português brasileiro informal, 1-3 frases curtas.`,
+    frio:       `Você é ${name}, ${prof}. Uma SDR ligou do nada. Você é educada mas cética — não pediu esse contato. Se ela for genuína e empática, abra um pouco. Responda em português brasileiro informal, 1-3 frases curtas.`,
+    resistente: `Você é ${name}, ${prof}. Você foi indicada mas tem pouco tempo e é cética com vendas. Interrompa às vezes, peça objetividade. Só abra se a SDR for muito boa. Responda em português brasileiro informal, 1-3 frases curtas.`,
+    ocupado:    `Você é ${name}, ${prof}. Está muito ocupada. Responde com pressa. Só fica se a SDR capturar sua atenção nos primeiros 30 segundos. Responda em português brasileiro informal, 1-2 frases bem curtas.`
+  };
+
+  const msgs = document.getElementById('messages');
+  const chatHistory = Array.from(msgs.querySelectorAll('.msg:not(.system)')).map(m => {
+    const role = m.classList.contains('marina') ? 'SDR' : name;
+    return `${role}: ${m.querySelector('.msg-bubble').textContent}`;
+  }).slice(-10).join('\n');
+
+  try {
+    const resp = await window.cowork.askClaude(
+      `${personas[type] || personas.referido}\n\nHistórico da conversa:\n${chatHistory}\n\nResponda como ${name} à última fala da SDR.`,
+      []
+    );
+    document.getElementById(loadId)?.remove();
+    addMsg('prospect', resp, name);
+  } catch(e) {
+    document.getElementById(loadId)?.remove();
+    // Fallback responses
+    const fallbacks = ['Entendi... pode me falar mais?', 'Hm, interessante. Continue.', 'Tá, e o que vocês fazem exatamente?', 'Quanto tempo vai levar isso?', 'Me fala mais sobre esse treinamento.'];
+    addMsg('prospect', fallbacks[Math.floor(Math.random()*fallbacks.length)], name);
+  }
+}
+
+async function getFeedback() {
+  const score = stagesDone.size;
+  const done = STAGES.filter(s => stagesDone.has(s.id)).map(s => s.name);
+  const missing = STAGES.filter(s => !stagesDone.has(s.id)).map(s => s.name);
+
+  const feedbackMsg = `Pontuação: ${score}/7 etapas\n✅ Concluídas: ${done.join(', ') || 'Nenhuma'}\n❌ Faltaram: ${missing.join(', ') || 'Nenhuma'}`;
+
+  let aiMsg = '';
+  try {
+    aiMsg = await window.cowork.askClaude(
+      `Você é um coach de vendas avaliando uma SDR da Vox2You (escola de oratória). O roteiro tem 7 etapas: Abertura, Rapport/Indicação, Qualificação, Dor & SPIN, Apresentação Vox, Marcação, Assentamento.\n\nResultado da simulação:\n${feedbackMsg}\n\nDê um feedback direto e motivador em português: o que foi bem, o que melhorar, e 1 dica específica para a etapa mais crítica que faltou. Máximo 5 linhas.`,
+      []
+    );
+  } catch(e) {
+    aiMsg = missing.length === 0
+      ? '🎉 Perfeita execução! Você cobriu todas as etapas. Foque agora em naturalidade e timing.'
+      : `Foco nas etapas que faltaram: ${missing.join(', ')}. Pratique o assentamento com firmeza e opção dupla na marcação.`;
+  }
+
+  addMsg('system', `📊 AVALIAÇÃO DA SESSÃO\n${feedbackMsg}\n\n💡 ${aiMsg}`);
+  document.getElementById('btnFeedback').hidden = true;
+}
+
+function detectStages(text) {
+  const lower = text.toLowerCase();
+  STAGES.forEach(s => {
+    if (!stagesDone.has(s.id) && s.keywords.some(k => lower.includes(k))) {
+      stagesDone.add(s.id);
+      updateStageUI();
+    }
+  });
+}
+
+function updateStageUI() {
+  STAGES.forEach(s => {
+    const item = document.getElementById('stage-'+s.id);
+    const check = document.getElementById('check-'+s.id);
+    if (stagesDone.has(s.id)) {
+      item.classList.add('done');
+      check.textContent = '✓';
+    } else {
+      item.classList.remove('done');
+      check.textContent = '';
+    }
+  });
+  document.getElementById('scoreNum').textContent = `${stagesDone.size}/7`;
+}
+
+function addMsg(role, text, label) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  const lbl = role === 'marina' ? 'Marina' : (role === 'system' ? '' : (label || 'Prospect'));
+  div.innerHTML = role !== 'system'
+    ? `<div class="msg-label">${lbl}</div><div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`
+    : `<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+function scrollChat() {
+  const m = document.getElementById('messages');
+  m.scrollTop = m.scrollHeight;
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+// ── Avaliação ──
+const starValues = {};
+function setStar(stageId, val) {
+  starValues[stageId] = val;
+  const stars = document.querySelectorAll(`#stars-${stageId} .star`);
+  stars.forEach((s, i) => s.classList.toggle('active', i < val));
+}
+
+function saveEval() {
+  const name = document.getElementById('evalName').value.trim();
+  if (!name) { alert('Informe o nome do prospect.'); return; }
+
+  const stages = STAGES.map(s => ({
+    id: s.id, name: s.name,
+    stars: starValues[s.id] || 0,
+    note: document.getElementById('note-'+s.id).value.trim()
+  }));
+  const avg = stages.filter(s=>s.stars>0).reduce((a,s)=>a+s.stars,0) / Math.max(1, stages.filter(s=>s.stars>0).length);
+
+  const record = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('pt-BR'),
+    name,
+    prof: document.getElementById('evalProf').value,
+    type: document.getElementById('evalType').value,
+    result: document.getElementById('evalResult').value,
+    obs: document.getElementById('evalObs').value,
+    stages,
+    avg: avg.toFixed(1)
+  };
+
+  const saved = JSON.parse(localStorage.getItem('vox_evals') || '[]');
+  saved.unshift(record);
+  localStorage.setItem('vox_evals', JSON.stringify(saved));
+
+  // Reset
+  document.getElementById('evalName').value = '';
+  document.getElementById('evalProf').value = '';
+  document.getElementById('evalObs').value = '';
+  STAGES.forEach(s => {
+    delete starValues[s.id];
+    document.querySelectorAll(`#stars-${s.id} .star`).forEach(el => el.classList.remove('active'));
+    document.getElementById('note-'+s.id).value = '';
+  });
+
+  switchTab('hist');
+}
+
+// ── Histórico ──
+function loadHistory() { /* loaded on demand */ }
+
+function renderHistory() {
+  const data = JSON.parse(localStorage.getItem('vox_evals') || '[]');
+  const container = document.getElementById('histContainer');
+  if (!data.length) {
+    container.innerHTML = '<div class="hist-empty">Nenhuma avaliação salva ainda.<br>Faça ligações e avalie pelo aba "Avaliar Ligação".</div>';
+    return;
+  }
+  container.innerHTML = `<div class="hist-list">${data.map(r => {
+    const avg = parseFloat(r.avg);
+    const cls = avg >= 2.5 ? 'green' : avg >= 1.5 ? 'yellow' : avg > 0 ? 'red' : 'gray';
+    const resultBadge = r.result.includes('✅') ? 'green' : r.result.includes('📅') ? 'yellow' : 'gray';
+    return `<div class="hist-card" onclick="showDetail(${r.id})">
+      <div class="hist-header">
+        <div>
+          <div class="hist-name">${r.name}</div>
+          <div class="hist-date">${r.date} · ${r.prof || r.type}</div>
+        </div>
+        <div class="hist-score">${r.avg}★</div>
+      </div>
+      <div class="hist-badges">
+        <span class="badge ${resultBadge}">${r.result}</span>
+        <span class="badge ${cls}">Média ${r.avg}/3</span>
+        ${r.stages.filter(s=>s.stars===3).length > 0 ? `<span class="badge green">${r.stages.filter(s=>s.stars===3).length} excelentes</span>` : ''}
+        ${r.stages.filter(s=>s.stars===1).length > 0 ? `<span class="badge red">${r.stages.filter(s=>s.stars===1).length} a melhorar</span>` : ''}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function showDetail(id) {
+  const data = JSON.parse(localStorage.getItem('vox_evals') || '[]');
+  const r = data.find(x => x.id === id);
+  if (!r) return;
+  const starStr = n => n > 0 ? '★'.repeat(n) + '☆'.repeat(3-n) : '—';
+  document.getElementById('modalContent').innerHTML = `
+    <h2>${r.name}</h2>
+    <p style="color:#6b7280;font-size:13px;margin-bottom:16px">${r.date} · ${r.type} · ${r.result}</p>
+    ${r.stages.map(s => `
+      <div class="modal-stage">
+        <span style="font-size:14px;font-weight:600">${s.name}</span>
+        <div>
+          <span style="color:#f59e0b;font-size:16px">${starStr(s.stars)}</span>
+          ${s.note ? `<div class="modal-note">"${s.note}"</div>` : ''}
+        </div>
+      </div>`).join('')}
+    ${r.obs ? `<p style="margin-top:14px;font-size:14px;color:#374151"><strong>Observações:</strong> ${r.obs}</p>` : ''}
+    <div class="modal-btns">
+      <button class="btn-close" onclick="closeModal()">Fechar</button>
+      <button class="btn-delete" onclick="deleteEval(${r.id})">Excluir</button>
+    </div>`;
+  document.getElementById('modalOverlay').hidden = false;
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').hidden = true;
+  }
+}
+
+function deleteEval(id) {
+  const data = JSON.parse(localStorage.getItem('vox_evals') || '[]').filter(x => x.id !== id);
+  localStorage.setItem('vox_evals', JSON.stringify(data));
+  closeModal();
+  renderHistory();
+}
+
+init();
+</script>
+</body>
+</html>
