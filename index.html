@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDR Trainer â Vox2You</title>
+<title>SDR Trainer — Vox2You</title>
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,7 +21,7 @@
 
   .content { padding: 20px 24px; max-width: 980px; margin: 0 auto; }
 
-  /* ââ SIMULAÃÃO ââ */
+  /* ── SIMULAÇÃO ── */
   .sim-layout { display: grid; grid-template-columns: 1fr 260px; gap: 16px; height: calc(100vh - 195px); min-height: 520px; }
 
   .chat-panel { background: white; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
@@ -72,7 +72,7 @@
   .score-num { font-size: 30px; font-weight: 800; color: #7c3aed; }
   .score-label { font-size: 12px; color: #6b7280; margin-top: 2px; }
 
-  /* ââ AVALIAÃÃO ââ */
+  /* ── AVALIAÇÃO ── */
   .eval-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
@@ -91,7 +91,7 @@
   .btn-save { width: 100%; background: #7c3aed; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px; }
   .btn-save:hover { background: #6d28d9; }
 
-  /* ââ HISTÃRICO ââ */
+  /* ── HISTÓRICO ── */
   .hist-empty { text-align: center; padding: 60px 20px; color: #9ca3af; font-size: 15px; }
   .hist-card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.2s; margin-bottom: 12px; }
   .hist-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
@@ -106,7 +106,7 @@
   .badge.gray { background: #f3f4f6; color: #6b7280; }
   .hist-score { font-size: 22px; font-weight: 800; color: #7c3aed; }
 
-  /* ââ MODAL ââ */
+  /* ── MODAL ── */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
   .modal { background: white; border-radius: 16px; padding: 24px; max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto; }
   .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
@@ -114,7 +114,7 @@
   .modal-note { font-size: 13px; color: #6b7280; font-style: italic; }
   .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
 
-  /* ââ ROTEIRO ââ */
+  /* ── ROTEIRO ── */
   .roteiro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .roteiro-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .roteiro-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #7c3aed; }
@@ -143,43 +143,43 @@
 
 <div class="header">
   <div class="header-left">
-    <h1>ðï¸ SDR Trainer â Vox2You</h1>
-    <p>SimulaÃ§Ã£o de ligaÃ§Ã£o com IA Â· AvaliaÃ§Ã£o Â· Roteiro</p>
+    <h1>🎙️ SDR Trainer — Vox2You</h1>
+    <p>Simulação de ligação com IA · Avaliação · Roteiro</p>
   </div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('sim')">ð SimulaÃ§Ã£o</div>
-  <div class="tab" onclick="switchTab('eval')">ð Avaliar</div>
-  <div class="tab" onclick="switchTab('hist')">ð HistÃ³rico</div>
-  <div class="tab" onclick="switchTab('roteiro')">ð Roteiro</div>
+  <div class="tab active" onclick="switchTab('sim')">📞 Simulação</div>
+  <div class="tab" onclick="switchTab('eval')">📋 Avaliar</div>
+  <div class="tab" onclick="switchTab('hist')">📊 Histórico</div>
+  <div class="tab" onclick="switchTab('roteiro')">📖 Roteiro</div>
 </div>
 
-<!-- âââ SIMULAÃÃO âââ -->
+<!-- ═══ SIMULAÇÃO ═══ -->
 <div id="tab-sim" class="content">
   <div class="sim-layout">
     <div class="chat-panel">
       <div class="chat-config">
         <label>Tipo:</label>
         <select id="prospectType">
-          <option value="referido">Referido Indicado</option>
-          <option value="frio">ProspecÃ§Ã£o Fria</option>
+          <option value="referido">Jeferido Indicado</option>
+          <option value="frio">Prospecção Fria</option>
           <option value="resistente">Resistente</option>
           <option value="ocupado">Ocupado/Impaciente</option>
         </select>
         <label>Nome:</label>
         <input id="prospectName" type="text" value="Ana" style="width:80px">
-        <label>ProfissÃ£o:</label>
+        <label>Profissão:</label>
         <input id="prospectProf" type="text" value="Gerente comercial" style="width:150px">
-        <button class="btn btn-primary" id="btnStart" onclick="startSession()">â¶ Iniciar</button>
-        <button class="btn btn-danger" id="btnEnd" onclick="endSession()" hidden>â  Encerrar</button>
-        <button class="btn btn-dark" id="btnFeedback" onclick="getFeedback()" hidden>ð¡ AvaliaÃ§Ã£o</button>
+        <button class="btn btn-primary" id="btnStart" onclick="startSession()">▶ Iniciar</button>
+        <button class="btn btn-danger" id="btnEnd" onclick="endSession()" hidden>■ Encerrar</button>
+        <button class="btn btn-dark" id="btnFeedback" onclick="getFeedback()" hidden>💡 Avaliação</button>
       </div>
       <div class="messages" id="messages">
-        <div class="msg system"><div class="msg-bubble">Configure o perfil do prospect acima e clique em <strong>Iniciar</strong> para comeÃ§ar a simulaÃ§Ã£o. Digite suas falas como se estivesse numa ligaÃ§Ã£o real.</div></div>
+        <div class="msg system"><div class="msg-bubble">Configure o perfil do prospect acima e clique em <strong>Iniciar</strong> para começar a simulação. Digite suas falas como se estivesse numa ligação real.</div></div>
       </div>
       <div class="chat-input">
-        <textarea id="userInput" placeholder="Digite o que vocÃª diria na ligaÃ§Ã£o... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
+        <textarea id="userInput" placeholder="Digite o que você diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
         <button class="btn btn-primary" id="btnSend" onclick="sendMessage()" disabled>Enviar</button>
       </div>
     </div>
@@ -189,121 +189,121 @@
       <div id="stageList"></div>
       <div class="score-box">
         <div class="score-num" id="scoreNum">0/7</div>
-        <div class="score-label">etapas concluÃ­das</div>
+        <div class="score-label">etapas concluídas</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- âââ AVALIAÃÃO âââ -->
+<!-- ═══ AVALIAÇÃO ═══ -->
 <div id="tab-eval" class="content" hidden>
   <div class="eval-grid">
     <div class="card">
-      <h3>ð Dados da LigaÃ§Ã£o</h3>
+      <h3>📝 Dados da Ligação</h3>
       <div class="field"><label>Nome do Prospect</label><input id="evalName" type="text" placeholder="Ex: Roberto Silva"></div>
-      <div class="field"><label>ProfissÃ£o / Empresa</label><input id="evalProf" type="text" placeholder="Ex: Vendedor, Construtora ABC"></div>
+      <div class="field"><label>Profissão / Empresa</label><input id="evalProf" type="text" placeholder="Ex: Vendedor, Construtora ABC"></div>
       <div class="field">
         <label>Tipo de Contato</label>
-        <select id="evalType"><option>Referido Indicado</option><option>ProspecÃ§Ã£o Fria</option><option>Follow-up</option></select>
+        <select id="evalType"><option>Referido Indicado</option><option>Prospecção Fria</option><option>Follow-up</option></select>
       </div>
       <div class="field">
         <label>Resultado</label>
         <select id="evalResult">
-          <option>Consultoria marcada â</option>
-          <option>Follow-up agendado ð</option>
-          <option>Sem interesse â</option>
-          <option>NÃ£o atendeu ðµ</option>
-          <option>LigaÃ§Ã£o incompleta â ï¸</option>
+          <option>Consultoria marcada ✅</option>
+          <option>Follow-up agendado 📅</option>
+          <option>Sem interesse ❌</option>
+          <option>Não atendeu 📵</option>
+          <option>Ligação incompleta ⚠️</option>
         </select>
       </div>
-      <div class="field"><label>ObservaÃ§Ãµes</label><textarea id="evalObs" placeholder="O que funcionou? O que faria diferente?"></textarea></div>
+      <div class="field"><label>Observações</label><textarea id="evalObs" placeholder="O que funcionou? O que faria diferente?"></textarea></div>
     </div>
     <div class="card">
-      <h3>â­ Avalie cada etapa</h3>
+      <h3>⭐ Avalie cada etapa</h3>
       <div id="stageEvalList"></div>
-      <button class="btn-save" onclick="saveEval()">ð¾ Salvar AvaliaÃ§Ã£o</button>
+      <button class="btn-save" onclick="saveEval()">💾 Salvar Avaliação</button>
     </div>
   </div>
 </div>
 
-<!-- âââ HISTÃRICO âââ -->
+<!-- ═══ HISTÓRICO ═══ -->
 <div id="tab-hist" class="content" hidden>
   <div id="histContainer"></div>
 </div>
 
-<!-- âââ ROTEIRO âââ -->
+<!-- ═══ ROTEIRO ═══ -->
 <div id="tab-roteiro" class="content" hidden>
   <div class="roteiro-grid">
     <div class="roteiro-card">
-      <h3>ð Roteiro â Referido Indicado</h3>
+      <h3>📞 Roteiro — Referido Indicado</h3>
       <div class="roteiro-etapa">
         <div class="etapa-num">1</div>
         <div class="etapa-title">Abertura</div>
-        <div class="etapa-script">"AlÃ´ [Nome], bom dia! Meu nome Ã© Marina, da Vox2You. VocÃª pode falar? Quem pediu pra eu ligar foi o [Indicador] â lembra quem Ã©?"</div>
+        <div class="etapa-script">"Alô [Nome], bom dia! Meu nome é Marina, da Vox2You. Você pode falar? Quem pediu pra eu ligar foi o [Indicador] — lembra quem é?"</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">2</div>
         <div class="etapa-title">Rapport com Indicador</div>
-        <div class="etapa-script">"O [Indicador] esteve comigo conhecendo nosso treinamento e achou fantÃ¡stico. Ele te indicou porque acha que vocÃª tambÃ©m tem interesse em desenvolver sua comunicaÃ§Ã£o. VocÃª faz o quÃª?"</div>
+        <div class="etapa-script">"o [Indicador] esteve comigo conhecendo nosso treinamento e achou fantástico. Ele te indicou porque acha que você também tem interesse em desenvolver sua comunicação. Você faz o quê?"</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">3</div>
-        <div class="etapa-title">QualificaÃ§Ã£o</div>
-        <div class="etapa-script">"Que legal! Me fala como Ã© seu trabalho... VocÃª tem apresentaÃ§Ãµes com frequÃªncia? JÃ¡ teve a sensaÃ§Ã£o de que podia ter se expressado melhor numa reuniÃ£o importante?"</div>
+        <div class="etapa-title">Qualificação</div>
+        <div class="etapa-script">"Que legal! Me fala como é seu trabalho... Você tem apresentações com frequência? Já teve a sensação de que podia ter se expressado melhor numa reunião importante?"</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">4</div>
         <div class="etapa-title">Dor & SPIN</div>
-        <div class="etapa-script">"De 1 a 10, como vocÃª avalia sua comunicaÃ§Ã£o hoje? [...] E se vocÃª dominasse isso, seus resultados melhorariam? [...] VocÃª tem interesse em crescer pessoal e profissionalmente?"</div>
-        <div class="etapa-dica">ð¡ Se responder "nÃ£o": entender motivo â oferecer aula grÃ¡tis / workshop</div>
+        <div class="etapa-script">"De 1 a 10, como você avalia sua comunicação hoje? [...] E se você dominasse isso, seus resultados melhorariam? [...] Você tem interesse em crescer pessoal e profissionalmente?"</div>
+        <div class="etapa-dica">💡 Se responder "não": entender motivo → oferecer aula grátis / workshop</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">5</div>
-        <div class="etapa-title">ApresentaÃ§Ã£o Vox</div>
-        <div class="etapa-script">"A Vox2You Ã© a maior rede de escolas de oratÃ³ria da AmÃ©rica Latina. Mais de 90 mil alunos, treinamento presencial e 100% prÃ¡tico â oratÃ³ria, PNL, inteligÃªncia emocional."</div>
+        <div class="etapa-title">Apresentação Vox</div>
+        <div class="etapa-script">"A Vox2You é a maior rede de escolas de oratória da América Latina. Mais de 90 mil alunos, treinamento presencial e 100% prático — oratória, PNL, inteligência emocional."</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">6</div>
-        <div class="etapa-title">MarcaÃ§Ã£o â Dupla OpÃ§Ã£o</div>
-        <div class="etapa-script">"Vou marcar uma consultoria de 20 minutinhos pra vocÃ  conhecer o mÃ©todo â sem compromisso. Mas antes: vocÃ  toma suas decisÃµes sozinho(a) ou compartilha com alguÃ©m? [...] Tenho quinta Ã s 14h ou sexta Ã s 10h. Qual encaixa melhor?"</div>
-        <div class="etapa-dica">â ï¸ NUNCA perguntar "quando vocÃ  pode?" â sempre dupla opÃ§Ã£o fechada</div>
+        <div class="etapa-title">Marcação — Dupla Opção</div>
+        <div class="etapa-script">"Vou marcar uma consultoria de 20 minutinhos pra você conhecer o método — sem compromisso. Mas antes: você toma suas decisões sozinho(a) ou compartilha com alguém? [...] Tenho quinta às 14h ou sexta às 10h. Qual encaixa melhor?"</div>
+        <div class="etapa-dica">⚠️ NUNCA perguntar "quando você pode?" — sempre dupla opção fechada</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">7</div>
         <div class="etapa-title">Assentamento</div>
-        <div class="etapa-script">"[Nome], confirmando: nossa consultoria estÃ¡ marcada pra [dia] Ã s [hora]. Eu travelei minha agenda e honro minha palavra â posso contar com a sua presenÃ§a? Anota aÃ­, porque eu jÃ¡ travei! Te mando o endereÃ§o/link agora."</div>
-        <div class="etapa-dica">ð¡ Aguarde a confirmaÃ§Ã£o verbal. NÃ£o encerre sem ela.</div>
+        <div class="etapa-script">"[Nome], confirmando: nossa consultoria está marcada pra [dia] às [hora]. Eu travelei minha agenda e honro minha palavra — posso contar com a sua presença? Anota aí, porque eu já travei! Te mando o endereço/link agora."</div>
+        <div class="etapa-dica">💡 Aguarde a confirmação verbal. Não encerre sem ela.</div>
       </div>
     </div>
 
     <div class="roteiro-card">
-      <h3>âï¸ Roteiro â ProspecÃ§Ã£o Fria</h3>
+      <h3>❄️ Roteiro — Prospecção Fria</h3>
       <div class="roteiro-etapa">
         <div class="etapa-num">1</div>
         <div class="etapa-title">Abertura Quente</div>
-        <div class="etapa-script">"Oi [Nome]! TÃ¡ feliz hoje?" [...] "Que bom! VocÃ  ainda nÃ£o me conhece â sou a Marina, da Vox2You: fale, comunique, transforme."</div>
+        <div class="etapa-script">"Oi [Nome]! Tá feliz hoje?" [...] "Que bom! Você ainda não me conhece — sou a Marina, da Vox2You: fale, comunique, transforme."</div>
       </div>
       <div class="roteiro-etapa">
         <div class="etapa-num">2</div>
         <div class="etapa-title">Desarmamento</div>
-        <div class="etapa-script">"Eu sei que vocÃª nÃ£o acordou hoje pensando 'quero um curso de oratÃ³ria' â entÃ£o meu objetivo nÃ£o Ã© esse agora. Estou fazendo uma pesquisinha rÃ¡pida. SÃ£o 3 minutinhos. Pode me ajudar?"</div>
-        <div class="etapa-dica">ð¡ Anti-venda proposital â desativa a defesa. Tom genuÃ­no e leve.</div>
+        <div class="etapa-script">"Eu sei que você não acordou hoje pensando 'quero um curso de oratória' — então meu objetivo não é esse agora. Estou fazendo uma pesquisinha rápida. São 3 minutinhos. Pode me ajudar?"</div>
+        <div class="etapa-dica">💡 Anti-venda proposital — desativa a defesa. Tom genuíno e leve.</div>
       </div>
       <div class="roteiro-etapa">
-        <div class="etapa-num">3â7</div>
-        <div class="etapa-title">QualificaÃ§Ã£o â Assentamento</div>
-        <div class="etapa-script">A partir daqui, seguir o mesmo fluxo do Referido: profissÃ£o â dor â apresentaÃ§Ã£o â dupla opÃ§Ã£o â assentamento.</div>
+        <div class="etapa-num">3–7</div>
+        <div class="etapa-title">Qualificação → Assentamento</div>
+        <div class="etapa-script">A partir daqui, seguir o mesmo fluxo do Referido: profissão → dor → apresentação → dupla opção → assentamento.</div>
       </div>
 
       <div style="margin-top: 24px; padding: 16px; background: #fef3c7; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #92400e;">â ï¸ Pontos de AtenÃ§Ã£o â Marina</div>
+        <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #92400e;">⚠️ Pontos de Atenção — Marina</div>
         <div style="font-size: 13px; color: #78350f; line-height: 1.7;">
-          <strong>Baixo Senso de UrgÃªncia (32pts)</strong><br>
-          NÃ£o deixe a ligaÃ§Ã£o "em aberto". Se a pessoa disser "vou pensar", use:<br>
+          <strong>Baixo Senso de Urgência (32pts)</strong><br>
+          Não deixe a ligação "em aberto". Se a pessoa disser "vou pensar", use:<br>
           <em>"Entendo! O que te impediria de marcar agora pra conhecer sem compromisso?"</em><br><br>
           <strong>Assentamento com firmeza</strong><br>
-          ApÃ³s marcar, nÃ£o encerre sem a confirmaÃ§Ã£o verbal. Aguarde.<br><br>
-          <strong>Sua superpotÃªncia Ã© a empatia</strong><br>
+          Após marcar, não encerre sem a confirmação verbal. Aguarde.<br><br>
+          <strong>Sua superpotência é a empatia</strong><br>
           Use a escuta ativa. Deixe a pessoa falar. Quanto mais ela fala, mais ela se convence.
         </div>
       </div>
@@ -320,16 +320,49 @@
 const API_URL = '/api/chat';
 
 const STAGES = [
-  { id:'abertura',     name:'1. Abertura',       desc:'ApresentaÃ§Ã£o + permissÃ£o',          kw:['ainda nÃ£o me conhece','pode falar','bom dia','boa tarde','meu nome','tÃ¡ feliz','nÃ£o me conhece','alÃ´'] },
-  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexÃ£o emocional',    kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo nÃ£o Ã© esse','nÃ£o acordou'] },
-  { id:'qualificacao', name:'3. QualificaÃ§Ã£o',    desc:'ProfissÃ£o e contexto',               kw:['trabalha com','faz o que','profiss',Â§area',/o que vocÃª faz',/me conta','sua atividade'] },
-  { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10',  kw:['ansioso','apresentaÃ§Ã£o',resultado','comunicaÃ§Ã£o',áÁÉÌ°¦¥¹±×©¸°ÄÄÀ°Á½É¥ÑÈ°ÉÕ¹§¼½¥¼tô°(ì¥èÁ¥Ñ °¹µèÔ¸ÁÉÍ¹Ñ¼°ÍèY½à°äÀµ¥°±Õ¹½Ì°·¥Ñ½¼°­ÜéläÀµ¥°°µ¥½ÈÉ°½ÉÓÉ¥°ÉÍ¥°°±µ¹¸°µ±Ô°·¥Ñ½¼°ÁÉÍ¹¥°°ÁËÑ¥¼°Ù½àÉå½Ôtô°(ì¥èµÉ¼°¹µèØ¸5É¼°Íè
-½¹ÍÕ±Ñ½É¥½´ÕÁ±½Ã¼°­Üél½¹ÍÕ±Ñ½É¥°ÈÀµ¥¹ÕÑ¼°ÐÀµ¥¹ÕÑ¼°ÅÕ¥¹Ñ°ÍáÑ°ÍÕ¹°ÑË°½¹±¥¹°ÁÉÍ¹¥°°Í½±°Ñ¹¡¼¡½ËÉ¥¼tô°(ì¥èÍÍ¹Ñµ¹Ñ¼°¹µèÜ¸ÍÍ¹Ñµ¹Ñ¼°Íè
-½¹¥ÉµÈ½µÁÉ½µ¥ÍÍ¼¥Éµ°­Üél½¹¥Éµ¹¼°ÑÉÙ¤°¡½¹É¼°Á½ÍÍ¼½¹ÑÈ°¹½Ñ°Ý¡ÑÍÁÀ°Ó¤³°¹É¼tô°)tì()±¦ùMÍÍ¥½¹Ñ¥Ùô±Íì)±ÐÍÑÍ½¹ô¹ÜMÐ ¤ì)±Ð¡Ñ5ÍÍÌômtì)½¹ÍÐÍÑÉY±ÕÌôíôì()Õ¹Ñ¥½¸¥¹¥Ð ¤ì(É¹ÉMÑ1¥ÍÐ ¤ì(É¹ÉMÑÙ±1¥ÍÐ ¤ì)ô((¼¼RR QÌRR )Õ¹Ñ¥½¸ÍÝ¥Ñ¡Q¡Ð¤ì(lÍ¥´°Ù°°¡¥ÍÐ°É½Ñ¥É¼t¹½É  ¡¥°¤¤ôøì(½Õµ¹Ð¹Ñ±µ¹Ñ	å% Ñ´­¥¤¹¡¥¸ô¥ôôÐì(½Õµ¹Ð¹ÅÕÉåM±Ñ½É±° ¹Ñ¥m¥t¹±ÍÍ1¥ÍÐ¹Ñ½± Ñ¥Ù°¥ôôôÐ¤ì(ô¤ì(¥¡Ðôôô¡¥ÍÐ¤É¹É!¥ÍÑ½Éä ¤ì)ô((¼¼RR MÑU$RR )Õ¹Ñ¥½¸É¹ÉMÑ1¥ÍÐ ¤ì(½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍÑ1¥ÍÐ¤¹¥¹¹É!Q50ôMQL¹µÀ¡Ìôø(ñ¥Ø±ÍÌôÍÑµ¥Ñ´¥ôÍ¤´íÌ¹¥ôø(ñ¥Ø±ÍÌôÍÑµ¡¬¥ôÍ´íÌ¹¥ôøð½¥Øø(ñ¥Øøñ¥Ø±ÍÌôÍÑµ¹µøíÌ¹¹µôð½¥Øøñ¥Ø±ÍÌôÍÑµÍøíÌ¹Íôð½¥Øøð½¥Øø(ð½¥Øù(¤¹©½¥¸ ¤ì)ô()Õ¹Ñ¥½¯n updateStages() {
+  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',          kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece','alô'] },
+  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',    kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
+  { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',               kw:[trabalha com','faz o que','profiss','área','o que você faz','me conta','sua atividade'] },
+  { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10',  kw:['ansioso','apresentação','resultado','comunicação','expres','influên','1 a 10','poderia ter','reunião','negociação'] },
+  { id:'pitch',        name:'5. Apresentação',    desc:'Vox, 90 mil alunos, método',        kw:['90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático','vox2you'] },
+  { id:'marcacao',     name:'6. Marcação',        desc:'Consultoria com dupla opção',       kw:['consultoria','20 minuto','40 minuto','quinta','sexta','segunda','terça','online','presencial','escola','tenho horário'] },
+  { id:'assentamento', name:'7. Assentamento',    desc:'Confirmar compromisso firme',       kw:['confirmando','travei','honro','posso contar','anota','whatsapp','até lá','endereço'] },
+];
+
+let sessionActive = false;
+let stagesDone = new Set();
+let chatMessages = [];
+const starValues = {};
+
+function init() {
+  renderStageList();
+  renderStageEvalList();
+}
+
+// ── Tabs ──
+function switchTab(t) {
+  ['sim','eval','hist','roteiro'].forEach((id, i) => {
+    document.getElementById('tab-'+id).hidden = id !== t;
+    document.querySelectorAll('.tab')[i].classList.toggle('active', id === t);
+  });
+  if (t === 'hist') renderHistory();
+}
+
+// ── Stage UI ──
+function renderStageList() {
+  document.getElementById('stageList').innerHTML = STAGES.map(s =>
+    `<div class="stage-item" id="si-${s.id}">
+      <div class="stage-check" id="sc-${s.id}"></div>
+      <div><div class="stage-name">${s.name}</div><div class="stage-desc">${s.desc}</div></div>
+    </div>`
+  ).join('');
+}
+
+function updateStages() {
   STAGES.forEach(s => {
     const done = stagesDone.has(s.id);
     document.getElementById('si-'+s.id).classList.toggle('done', done);
-    document.getElementById('sc-'+s.id).textContent = done ? 'â' : '';
+    document.getElementById('sc-'+s.id).textContent = done ? '✓' : '';
   });
   document.getElementById('scoreNum').textContent = `${stagesDone.size}/7`;
 }
@@ -344,7 +377,7 @@ function detectStages(text) {
   updateStages();
 }
 
-// ââ SimulaÃ§Ã£o ââ
+// ── Simulação ──
 function startSession() {
   sessionActive = true;
   stagesDone.clear();
@@ -362,10 +395,10 @@ function startSession() {
   const prof = document.getElementById('prospectProf').value || 'profissional';
 
   const intros = {
-    referido: `ð ${name} atendeu â ela Ã© ${prof}, foi indicada por uma conhecida sua. EstÃ¡ receptiva mas nÃ£o sabe quem vocÃª Ã©.`,
-    frio:     `ð ${name} atendeu com um "alÃ´?" neutro. NÃ£o te conhece, nÃ£o esperava sua ligaÃ§Ã£o.`,
-    resistente:`ð ${name} atendeu com tom impaciente: "AlÃ´, pode ser rÃ¡pido, tÃ´ ocupada."`,
-    ocupado:  `ð ${name} atendeu correndo: "AlÃ´, pode falar rÃ¡pido?"`
+    referido: `📞 ${name} atendeu — ela é ${prof}, foi indicada por uma conhecida sua. Está receptiva mas não sabe quem você é.`,
+    frio:     `📞 ${name} atendeu com um "alô?" neutro. Não te conhece, não esperava sua ligação.`,
+    resistente:`📞 ${name} atendeu com tom impaciente: "Alô, pode ser rápido, tô ocupada."`,
+    ocupado:  `📞 ${name} atendeu correndo: "Alô, pode falar rápido?"`
   };
   addMsg('system', intros[type] || intros.referido);
   document.getElementById('userInput').focus();
@@ -378,7 +411,7 @@ function endSession() {
   document.getElementById('btnStart').hidden = false;
   document.getElementById('btnEnd').hidden = true;
   document.getElementById('btnFeedback').hidden = false;
-  addMsg('system', `SessÃ£o encerrada â ${stagesDone.size}/7 etapas. Clique em "AvaliaÃ§Ã£o" para o feedback da IA.`);
+  addMsg('system', `Sessão encerrada — ${stagesDone.size}/7 etapas. Clique em "Avaliação" para o feedback da IA.`);
 }
 
 async function sendMessage() {
@@ -413,7 +446,7 @@ async function sendMessage() {
     chatMessages.push({ role: 'assistant', content: reply });
   } catch(e) {
     removeLoading(loadId);
-    addMsg('system', 'â ï¸ Erro de conexÃ£o. Verifique se o servidor estÃ¡ rodando.');
+    addMsg('system', '⚠️ Erro de conexão. Verifique se o servidor está rodando.');
   }
 }
 
@@ -422,7 +455,7 @@ async function getFeedback() {
   const missing = STAGES.filter(s => !stagesDone.has(s.id)).map(s => s.name);
   document.getElementById('btnFeedback').disabled = true;
 
-  const prompt = `Avalie essa sessÃ£o de treino:\nPontuaÃ§Ã£o: ${stagesDone.size}/7\nâ ConcluÃ­das: ${done.join(', ') || 'Nenhuma'}\nâ Faltaram: ${missing.join(', ') || 'Nenhuma'}\n\nDÃª feedback direto em 5 linhas.`;
+  const prompt = `Avalie essa sessão de treino:\nPontuação: ${stagesDone.size}/7\n✅ Concluídas: ${done.join(', ') || 'Nenhuma'}\n❌ Faltaram: ${missing.join(', ') || 'Nenhuma'}\n\nDê feedback direto em 5 linhas.`;
 
   const loadId = addLoading('feedback');
   try {
@@ -433,10 +466,10 @@ async function getFeedback() {
     });
     const data = await res.json();
     removeLoading(loadId);
-    addMsg('feedback', `ð AVALIAÃÃO â ${stagesDone.size}/7 etapas\n\n${data.content || data.error}`);
+    addMsg('feedback', `📊 AVALIAÇÃO — ${stagesDone.size}/7 etapas\n\n${data.content || data.error}`);
   } catch(e) {
     removeLoading(loadId);
-    addMsg('system', 'â ï¸ Erro ao buscar avaliaÃ§Ã£o.');
+    addMsg('system', '⚠️ Erro ao buscar avaliação.');
   }
   document.getElementById('btnFeedback').disabled = false;
   document.getElementById('btnFeedback').hidden = true;
@@ -472,19 +505,19 @@ function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
-// ââ AvaliaÃ§Ã£o ââ
+// ── Avaliação ──
 function renderStageEvalList() {
   document.getElementById('stageEvalList').innerHTML = STAGES.map(s =>
     `<div class="stage-eval-item">
       <div class="stage-eval-header">
         <div class="stage-eval-name">${s.name}</div>
         <div class="stars" id="stars-${s.id}">
-          <span class="star" onclick="setStar('${s.id}',1)">â</span>
-          <span class="star" onclick="setStar('${s.id}',2)">â</span>
-          <span class="star" onclick="setStar('${s.id}',3)">â</span>
+          <span class="star" onclick="setStar('${s.id}',1)">★</span>
+          <span class="star" onclick="setStar('${s.id}',2)">★</span>
+          <span class="star" onclick="setStar('${s.id}',3)">★</span>
         </div>
       </div>
-      <textarea class="stage-eval-note" id="note-${s.id}" placeholder="Nota rÃ¡pida..." rows="1"></textarea>
+      <textarea class="stage-eval-note" id="note-${s.id}" placeholder="Nota rápida..." rows="1"></textarea>
     </div>`
   ).join('');
 }
@@ -536,27 +569,27 @@ function saveEval() {
   switchTab('hist');
 }
 
-// ââ HistÃ³rico ââ
+// ── Histórico ──
 function renderHistory() {
   let data = [];
   try { data = JSON.parse(localStorage.getItem('vox_evals') || '[]'); } catch(e) {}
   const container = document.getElementById('histContainer');
   if (!data.length) {
-    container.innerHTML = '<div class="hist-empty">Nenhuma avaliaÃ§Ã£o salva ainda.<br><br>FaÃ§a ligaÃ§Ãµes reais e avalie na aba "Avaliar".</div>';
+    container.innerHTML = '<div class="hist-empty">Nenhuma avaliação salva ainda.<br><br>Faça ligações reais e avalie na aba "Avaliar".</div>';
     return;
   }
   container.innerHTML = data.map(r => {
     const avg = parseFloat(r.avg);
     const cls = avg >= 2.5 ? 'green' : avg >= 1.5 ? 'yellow' : avg > 0 ? 'red' : 'gray';
-    const rb = r.result.includes('â') ? 'green' : r.result.includes('ð') ? 'yellow' : 'gray';
+    const rb = r.result.includes('✅') ? 'green' : r.result.includes('📅') ? 'yellow' : 'gray';
     return `<div class="hist-card" onclick="showDetail(${r.id})">
       <div class="hist-header">
-        <div><div class="hist-name">${r.name}</div><div class="hist-date">${r.date} Â· ${r.prof || r.type}</div></div>
-        <div class="hist-score">${r.avg}â</div>
+        <div><div class="hist-name">${r.name}</div><div class="hist-date">${r.date} · ${r.prof || r.type}</div></div>
+        <div class="hist-score">${r.avg}★</div>
       </div>
       <div class="hist-badges">
         <span class="badge ${rb}">${r.result}</span>
-        <span class="badge ${cls}">MÃ©dia ${r.avg}/3</span>
+        <span class="badge ${cls}">Média ${r.avg}/3</span>
         ${r.stages.filter(s=>s.stars===3).length ? `<span class="badge green">${r.stages.filter(s=>s.stars===3).length} excelentes</span>` : ''}
         ${r.stages.filter(s=>s.stars===1).length ? `<span class="badge red">${r.stages.filter(s=>s.stars===1).length} a melhorar</span>` : ''}
       </div>
@@ -569,10 +602,10 @@ function showDetail(id) {
   try { data = JSON.parse(localStorage.getItem('vox_evals') || '[]'); } catch(e) {}
   const r = data.find(x => x.id === id);
   if (!r) return;
-  const star = n => n > 0 ? 'â'.repeat(n)+'â'.repeat(3-n) : 'â';
+  const star = n => n > 0 ? '★'.repeat(n)+'☆'.repeat(3-n) : '—';
   document.getElementById('modalContent').innerHTML = `
     <h2>${r.name}</h2>
-    <p style="color:#6b7280;font-size:13px;margin-bottom:16px">${r.date} Â· ${r.type} Â· ${r.result}</p>
+    <p style="color:#6b7280;font-size:13px;margin-bottom:16px">${r.date} · ${r.type} · ${r.result}</p>
     ${r.stages.map(s => `<div class="modal-stage">
       <span style="font-size:13px;font-weight:600">${s.name}</span>
       <div><span style="color:#f59e0b;font-size:16px">${star(s.stars)}</span>${s.note ? `<div class="modal-note">"${s.note}"</div>` : ''}</div>
