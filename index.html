@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+TEST_PASTE_WORKS<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -241,7 +241,7 @@
         <div class="msg system"><div class="msg-bubble">Selecione o SDR e o tipo de prospect, depois clique em <strong>Iniciar</strong> para começar.</div></div>
       </div>
       <div class="chat-input">
-        <textarea id="userInput" placeholder="Digite o que vocà diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
+        <textarea id="userInput" placeholder="Digite o que você diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
         <button class="btn btn-primary" id="btnSend" onclick="sendMessage()" disabled>Enviar</button>
       </div>
     </div>
@@ -366,10 +366,10 @@
 <script>
 const API_URL = '/api/chat';
 
-const STABE = [
-  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',         kw:['ainda não me conhece','pode falar','bom dia','boa tarde',"meu nome','tá feliz','não me conhece','alô'] },
-  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',   kw:['indicou','pediu para',"me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
-  { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',             kw:['trabalha com','faz o que','profiss','uárea','o que vocà faz',"me conta','sua atividade'] },
+const STAGES = [
+  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',         kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece','alô'] },
+  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',   kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
+  { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',             kw:['trabalha com','faz o que','profiss','área','o que você faz','me conta','sua atividade'] },
   { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10', kw:['ansioso','apresentação','resultado','comunicação','expres','influên','1 a 10','poderia ter','reunião','negociação'] },
   { id:'pitch',        name:'5. Apresentação',    desc:'Vox, 90 mil alunos, método',       kw:['90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático','vox2you'] },
   { id:'marcacao',     name:'6. Marcação',        desc:'Consultoria com dupla opção',      kw:['consultoria','20 minuto','40 minuto','quinta','sexta','segunda','terça','online','presencial','escola','tenho horário'] },
@@ -388,14 +388,14 @@ const SCENARIO_NAMES = { referido:'Referido', frio:'Prospecção Fria', resisten
 const DEFAULT_SDR = {
   id: 'sdr-marina',
   name: 'Marina',
-  weakPoints: 'Baixo senso de urgência — tenda a deixar a ligação em aberto. Evita fechamentos diretos. Perfil DISC: Estável-Influente (S=34%, I=27%, C=25%, D=14%). Ponto forte: empatia e escuta ativa.'
+  weakPoints: 'Baixo senso de urgência — tende a deixar a ligação em aberto. Evita fechamentos diretos. Perfil DISC: Estável-Influente (S=34%, I=27%, C=25%, D=14%). Ponto forte: empatia e escuta ativa.'
 };
 
 const DEFAULT_SCRIPTS = [
   {
     id: 'ref-v1', scenarioId: 'referido', title: 'Referido — Padrão', status: 'aprovado',
     content: `ABERTURA
-"Alô [Nome], bom dia! Meu nome é [SDR], da Vox2You. Vocà pode falar um minutinho? Quem pediu pra eu ligar foi o [Indicador] — lembra quem é?"
+"Alô [Nome], bom dia! Meu nome é [SDR], da Vox2You. Você pode falar um minutinho? Quem pediu pra eu ligar foi o [Indicador] — lembra quem é?"
 
 RAPPORT
 "O [Indicador] esteve comigo conhecendo nosso treinamento e achou fantástico. Ele te indicou porque acha que você também tem interesse em desenvolver sua comunicação. Você faz o quê hoje?"
@@ -412,7 +412,7 @@ APRESENTAÇÃO VOX
 
 MARCAÇÃO — DUPLA OPÇÃO
 "Vou marcar uma consultoria de 20 minutinhos pra você conhecer o método — sem compromisso. Mas antes: você toma suas decisões sozinho(a) ou compartilha com alguém? Tenho quinta às 14h ou sexta às 10h. Qual encaixa melhor?"
-⚠️ NUNCA perguntar "quando vocà pode?" — sempre dupla opção fechada
+⚠️ NUNCA perguntar "quando você pode?" — sempre dupla opção fechada
 
 ASSENTAMENTO
 "[Nome], confirmando: nossa consultoria está marcada pra [dia] às [hora]. Eu travei minha agenda e honro minha palavra — posso contar com a sua presença? Anota aí! Te mando o endereço/link agora."
@@ -424,10 +424,10 @@ ASSENTAMENTO
 "Oi [Nome]! Sou [SDR] da Vox2You. Tô ligando porque o [Indicador] me pediu especificamente pra falar com você. São 3 minutinhos — pode?"
 
 QUALIFICAÇÃO RÁPIDA
-"Vocà trabalha com vendas ou apresentações? [...] E como você avalia sua comunicação de 1 a 10?"
+"Você trabalha com vendas ou apresentações? [...] E como você avalia sua comunicação de 1 a 10?"
 
 PITCH RÁPIDO
-"A Vox2You ajuda profissionais como vocà a dominar a comunicação. 90 mil alunos, método 100% prático — indicado pelo [Indicador], que já viu resultado."
+"A Vox2You ajuda profissionais como você a dominar a comunicação. 90 mil alunos, método 100% prático — indicado pelo [Indicador], que já viu resultado."
 
 FECHAMENTO DIRETO
 "Tenho dois horários disponíveis essa semana: quarta às 15h ou quinta às 10h. Qual desses encaixa melhor?"
@@ -439,23 +439,23 @@ ASSENTAMENTO
   {
     id: 'frio-v1', scenarioId: 'frio', title: 'Frio — Anti-Venda (Padrão)', status: 'aprovado',
     content: `ABERTURA DESARMANTE
-"Oi [Nome]! Tá feliz hoje?" [...] "Que bom! Vocà ainda não me conhece — sou [SDR], da Vox2You: fale, comunique, transforme."
+"Oi [Nome]! Tá feliz hoje?" [...] "Que bom! Você ainda não me conhece — sou [SDR], da Vox2You: fale, comunique, transforme."
 
 DESARMAMENTO
-"Eu sei que vocà não acordou hoje pensando 'quero um curso de oratória' — então meu objetivo não é esse agora. Estou fazendo uma pesquisinha rápida. São 3 minutinhos. Pode me ajudar?"
+"Eu sei que você não acordou hoje pensando 'quero um curso de oratória' — então meu objetivo não é esse agora. Estou fazendo uma pesquisinha rápida. São 3 minutinhos. Pode me ajudar?"
 💡 Anti-venda proposital — desativa a defesa. Tom genuíno e leve.
 
 QUALIFICAÇÃO
-"Vocà trabalha com vendas, apresentações, liderança? Me conta mais sobre o que você faz."
+"Você trabalha com vendas, apresentações, liderança? Me conta mais sobre o que você faz."
 
 DOR & SPIN
-"De 1 a 10, como vocà se sente quando precisa falar em público ou liderar uma reunião? O que aconteceria se você fosse ainda mais confiante nisso?"
+"De 1 a 10, como você se sente quando precisa falar em público ou liderar uma reunião? O que aconteceria se você fosse ainda mais confiante nisso?"
 
 APRESENTAÇÃO
 "A Vox2You é a maior rede de oratória da América Latina. 90 mil alunos, método presencial e prático."
 
 MARCAÇÃO
-"Tenho uma consultoria gratuita de 20 minutos — pra vocà conhecer sem nenhum compromisso. Vocà prefere [dia1] às [hora1] ou [dia2] às [hora2]?"
+"Tenho uma consultoria gratuita de 20 minutos — pra você conhecer sem nenhum compromisso. Você prefere [dia1] às [hora1] ou [dia2] às [hora2]?"
 
 ASSENTAMENTO
 "Perfeito! [Dia] às [hora] está na minha agenda. Honro minha palavra — posso contar com a sua presença? Te mando o endereço agora."`
@@ -463,13 +463,13 @@ ASSENTAMENTO
   {
     id: 'frio-v2', scenarioId: 'frio', title: 'Frio — Com Urgência', status: 'rascunho',
     content: `ABERTURA COM ENERGIA
-"[Nome], oi! Sou [SDR] da Vox2You. Vocà tem 3 minutinhos agora?"
+"[Nome], oi! Sou [SDR] da Vox2You. Você tem 3 minutinhos agora?"
 
 CONTEXTO + URGÊNCIA
 "Ótimo! Estou ligando porque temos uma turma nova abrindo essa semana e quero que você conheça antes de fechar as vagas."
 
 QUALIFICAÇÃO EXPRESSA
-"Vocà trabalha com o quê? [...] E comunicação é importante na sua área?"
+"Você trabalha com o quê? [...] E comunicação é importante na sua área?"
 
 SPIN
 "Se você pudesse se comunicar com mais confiança e clareza, o que mudaria nos seus resultados?"
@@ -489,7 +489,7 @@ ASSENTAMENTO
 "[Nome], sei que você está ocupado(a) — são literalmente 2 minutos. Prometo que vale."
 
 SE DISSER "não tenho interesse":
-"Entendo! Antes de desligar — o que seria o cenário ideal pra vocà querer conhecer o que a Vox2You faz? Só curiosidade."
+"Entendo! Antes de desligar — o que seria o cenário ideal pra você querer conhecer o que a Vox2You faz? Só curiosidade."
 
 REFRAME
 "Na verdade não é sobre cursos — é sobre resultados. A Vox2You treina comunicação pra quem já é bom e quer ser excelente."
@@ -1044,7 +1044,7 @@ function renderScriptList() {
 
 function newScript() {
   editingScriptId = null;
-  document.getElementById('editorHeading').textContent = 'Novo Roteiro7;
+  document.getElementById('editorHeading').textContent = 'Novo Roteiro';
   document.getElementById('editorTitleInput').value = SCENARIO_NAMES[currentScenario] + ' — Novo';
   document.getElementById('editorContent').value = '';
   document.getElementById('scriptEditorPanel').hidden = false;
