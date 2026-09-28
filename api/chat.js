@@ -22,7 +22,7 @@ ROTEIRO SDR — 7 ETAPAS:
 const buildProspectSystem = (name, prof, type, sdrName) => {
   const sdr = sdrName || 'SDR';
   const backstories = {
-    referido: `Você é ${name}, ${prof}. Tem 34 anos, é casada, tem 2 filhos. Uma amiga sua (que fez o curso da Vox) pediu que uma consultora ligasse para você. Você lembra vagamente, mas estava curiosa. Você tem dificuldade em falar em público — nas reuniões do trabalho, sente que suas ideias saem melhores na sua cabeça do que na hora de falar. Já perdeu uma promoção porque outro colega "se vendeu melhor". Isso te incomoda, mas você nunca parou para resolver. Você está no trabalho, um pouco ocupada, mas pode dar 5 minutos.`,
+    referido: `Você é ${name}, ${prof}. Tem 34 anos, é casada, tem 2 filhos. Uma amiga sua (que fez o curso da Vox) pediu que uma consultora ligasse para você. Você lembra vagamente, mas estava curiosa. Você tem dificuldade em falar em público — has reuniões do trabalho, sente que suas ideias saem melhores na sua cabeça do que na hora de falar. Já perdeu uma promoção porque outro colega "se vendeu melhor". Isso te incomoda, mas você nunca parou para resolver. Você está no trabalho, um pouco ocupada, mas pode dar 5 minutos.`,
     frio: `Você é ${name}, ${prof}. Tem 40 anos. Recebeu uma ligação inesperada — desconfiada no início, acha que é telemarketing. Mas é educada. Você tem um negócio próprio há 3 anos e sente que precisa melhorar sua comunicação para fechar mais clientes — seus concorrentes falam melhor, parecem mais confiantes. Nunca investiu em treinamento pessoal, acha caro e não sabe se funciona. Vai ceder só se a SDR for muito genuína e não parecer vendedora.`,
     resistente: `Você é ${name}, ${prof}. Tem 38 anos. Foi indicado(a), mas você é cético(a) com cursos. Já fez um curso de vendas que não serviu pra nada. Você tem pouco tempo, está entre reuniões, e antipatia imediata a qualquer coisa que pareça pitch de vendas. Se a SDR for robótica ou forçada, você desliga. Mas se ela for humana, direta e não tentar te vender logo de cara, você dá uma chance.`,
     ocupado: `Você é ${name}, ${prof}. Atendeu correndo — tem reunião em 10 minutos. Você é cordial mas impaciente. Fala rápido, quer respostas diretas. Se não capturar sua atenção em 20 segundos, você diz "olha, não é o momento certo" e desliga. Mas se a SDR for certeira e tocar num ponto real seu (você tem medo de falar mal em apresentações importantes), você para e ouve.`
@@ -43,6 +43,44 @@ COMO SE COMPORTAR:
 - Quando aquecer na conversa, demonstre isso: "Olha, na verdade isso que você falou faz sentido pra mim..."
 - NUNCA facilite demais. A SDR precisa trabalhar para chegar na marcação.
 - Responda em 1-3 frases naturais. Não use bullet points, não seja formal.`;
+};
+
+const buildEvaluateCallSystem = (sdrName, sdrWeakPoints) => {
+  const sdr = sdrName || 'a SDR';
+  const weakSection = sdrWeakPoints
+    ? `\n\nPERFIL DO SDR (${sdr}):\n${sdrWeakPoints}\nLeve em conta este perfil ao avaliar.`
+    : '';
+
+  return `${VOX_COACH_CONTEXT}
+${weakSection}
+
+Você está avaliando uma ligação REAL do(a) SDR ${sdr} com um prospect.
+
+TAREFA: Analise a transcrição fornecida e avalie CADA UMA das 7 etapas do roteiro da Vox.
+
+FORMATO DE RESPOSTA — responda SOMENTE com este JSON, sem texto antes ou depois:
+{
+  "stages": [
+    {"id": "abertura", "name": "Abertura", "score": 0, "comment": "..."},
+    {"id": "rapport", "name": "Rapport/Indicação", "score": 0, "comment": "..."},
+    {"id": "qualificacao", "name": "Qualificação", "score": 0, "comment": "..."},
+    {"id": "spin", "name": "Dor & SPIN", "score": 0, "comment": "..."},
+    {"id": "pitch", "name": "Apresentação Vox", "score": 0, "comment": "..."},
+    {"id": "marcacao", "name": "Marcação", "score": 0, "comment": "..."},
+    {"id": "assentamento", "name": "Assentamento", "score": 0, "comment": "..."}
+  ],
+  "result": "✅ Consultoria marcada | 📅 Agendamento pendente | ❌ Não marcou",
+  "overall": "Feedback direto em 3-4 frases. Cite o que foi feito bem, o que faltou e uma dica prática para a próxima ligação. Dirija-se ao SDR pelo nome."
+}
+
+ESCALA DE PONTUAÇÃO:
+- 0 = Etapa não executada ou não identificada
+- 1 = Executada com falhas significativas
+- 2 = Executada bem, com pequenas falhas
+- 3 = Executada com excelência
+
+Nos comentários, cite trechos específicos do que foi dito ou o que deveria ter sido dito.
+Use o campo "result" com EXATAMENTE um dos três valores acima, substituindo o texto pelo resultado real.`;
 };
 
 const buildFeedbackSystem = (sdrName, sdrWeakPoints) => {
@@ -69,7 +107,7 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { mode, messages, prospectName, prospectProf, prospectType, sdrName, sdrWeakPoints } = req.body;
+  const { mode, messages, prospectName, prospectProf, prospectType, sdrName, sdrWeakPoints, transcript } = req.body;
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({ error: 'API key não configurada. Configure ANTHROPIC_API_KEY no Vercel.' });
@@ -92,6 +130,28 @@ module.exports = async (req, res) => {
     } else if (mode === 'feedback') {
       systemPrompt = buildFeedbackSystem(sdrName || null, sdrWeakPoints || null);
       maxTokens = 500;
+    } else if (mode === 'evaluate_call') {
+      if (!transcript || !transcript.trim()) {
+        return res.status(400).json({ error: 'Transcrição vazia.' });
+      }
+      systemPrompt = buildEvaluateCallSystem(sdrName || null, sdrWeakPoints || null);
+      maxTokens = 1200;
+
+      const response = await client.messages.create({
+        model,
+        max_tokens: maxTokens,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: `TRANSCRIÇÃO DA LIGAÇÃO:\n\n${transcript}` }]
+      });
+
+      const raw = response.content[0].text.trim();
+      try {
+        const parsed = JSON.parse(raw);
+        return res.json({ evaluation: parsed });
+      } catch {
+        // fallback: return raw text if JSON parse fails
+        return res.json({ content: raw });
+      }
     } else {
       return res.status(400).json({ error: 'Modo inválido' });
     }
