@@ -91,6 +91,34 @@
   .btn-save { width: 100%; background: #7c3aed; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px; }
   .btn-save:hover { background: #6d28d9; }
 
+  /* ── AVALIAÇÃO IA ── */
+  .ai-eval-section { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+  .ai-eval-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .ai-eval-desc { font-size: 13px; color: #6b7280; margin-bottom: 14px; }
+  .ai-eval-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .ai-eval-controls label { font-size: 12px; font-weight: 600; color: #6b7280; }
+  .ai-eval-controls select { font-size: 13px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 10px; color: #1a1a2e; background: #f9fafb; }
+  #transcriptInput { width: 100%; font-size: 13px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-family: inherit; color: #1a1a2e; background: #f9fafb; resize: vertical; min-height: 120px; box-sizing: border-box; }
+  .ai-eval-btn-row { display: flex; gap: 10px; margin-top: 10px; }
+  .ai-eval-result { margin-top: 18px; border-top: 1px solid #f0f0f0; padding-top: 18px; }
+  .ai-eval-result-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .ai-eval-result-title { font-size: 14px; font-weight: 700; }
+  .ai-eval-result-badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+  .ai-stage-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+  .ai-stage-row:last-child { border-bottom: none; }
+  .ai-stage-score { min-width: 60px; display: flex; gap: 2px; }
+  .ai-stage-score .s { width: 16px; height: 16px; border-radius: 50%; display: inline-block; }
+  .ai-stage-score .s.filled { background: #f59e0b; }
+  .ai-stage-score .s.empty { background: #e5e7eb; }
+  .ai-stage-score .s.zero { background: #d1d5db; width: 12px; height: 12px; margin-top: 2px; }
+  .ai-stage-name { font-size: 12px; font-weight: 700; min-width: 130px; color: #374151; }
+  .ai-stage-comment { font-size: 13px; color: #4b5563; line-height: 1.5; }
+  .ai-overall { margin-top: 14px; background: #f8f7ff; border-left: 3px solid #7c3aed; padding: 12px 14px; border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.6; color: #374151; }
+  .ai-overall-label { font-size: 11px; font-weight: 700; color: #7c3aed; margin-bottom: 4px; }
+  .ai-save-row { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
+  .ai-save-row label { font-size: 13px; color: #6b7280; }
+  .ai-save-row input { font-size: 13px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 10px; flex: 1; font-family: inherit; }
+
   /* ── HISTÓRICO ── */
   .hist-empty { text-align: center; padding: 60px 20px; color: #9ca3af; font-size: 15px; }
   .hist-card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.2s; margin-bottom: 12px; }
@@ -213,7 +241,7 @@
         <div class="msg system"><div class="msg-bubble">Selecione o SDR e o tipo de prospect, depois clique em <strong>Iniciar</strong> para começar.</div></div>
       </div>
       <div class="chat-input">
-        <textarea id="userInput" placeholder="Digite o que vocà diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
+        <textarea id="userInput" placeholder="Digite o que você diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
         <button class="btn btn-primary" id="btnSend" onclick="sendMessage()" disabled>Enviar</button>
       </div>
     </div>
@@ -231,6 +259,23 @@
 
 <!-- ═══ AVALIAÇÃO ═══ -->
 <div id="tab-eval" class="content" hidden>
+
+  <!-- IA: avaliação de ligação real -->
+  <div class="ai-eval-section">
+    <h3>🤖 Avaliação de Ligação Real por IA</h3>
+    <p class="ai-eval-desc">Cole a transcrição da sua ligação. O coach vai analisar as 7 etapas e dar um feedback detalhado e honesto.</p>
+    <div class="ai-eval-controls">
+      <label>SDR:</label>
+      <select id="aiEvalSdrSelect"></select>
+    </div>
+    <textarea id="transcriptInput" placeholder="Cole aqui a transcrição da ligação...&#10;&#10;Pode ser do Fireflies, Otter, ou qualquer app de transcrição. Funciona também com anotações manuais do que foi dito."></textarea>
+    <div class="ai-eval-btn-row">
+      <button class="btn btn-primary" onclick="evaluateTranscript()" id="btnEvalTranscript">🔍 Avaliar com IA</button>
+      <button class="btn btn-gray" onclick="clearTranscript()">Limpar</button>
+    </div>
+    <div id="aiEvalResult" class="ai-eval-result" hidden></div>
+  </div>
+
   <div class="eval-grid">
     <div class="card">
       <h3>📝 Dados da Ligação</h3>
@@ -322,28 +367,28 @@
 const API_URL = '/api/chat';
 
 const STAGES = [
-  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',         kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece','alô'] },
+  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',         kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','vá feliz','não me conhece','alô'] },
   { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',   kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
   { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',             kw:['trabalha com','faz o que','profiss','área','o que você faz','me conta','sua atividade'] },
   { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10', kw:['ansioso','apresentação','resultado','comunicação','expres','influên','1 a 10','poderia ter','reunião','negociação'] },
   { id:'pitch',        name:'5. Apresentação',    desc:'Vox, 90 mil alunos, método',       kw:['90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático','vox2you'] },
   { id:'marcacao',     name:'6. Marcação',        desc:'Consultoria com dupla opção',      kw:['consultoria','20 minuto','40 minuto','quinta','sexta','segunda','terça','online','presencial','escola','tenho horário'] },
-  { id:'assentamento', name:'7. Assentamento',    desc:'Confirmar compromisso firme',      kw:['confirmando','travei','honro','posso contar','anota','whatsapp','até lá','endereço'] },
+  { id:'assentamento', name:'7. Assentamento',    desc:'Confirmar compromisso firme',      kw:['confirmando','travei','6honro','posso contar','anota','whatsapp','até lá','endereço'] },
 ];
 
 const SCENARIOS = [
-  { id:'referido',   label:'📞 Referido' },
-  { id:'frio',       label:'❄️ Frio' },
-  { id:'resistente', label:'😤 Resistente' },
-  { id:'ocupado',    label:'⏱️ Ocupado' },
+  { id:'referido',   label:'🐞 Referido' },
+  { id:'frio',       label:'⍄️ Frio' },
+  { id:'resistente', label:'🛤 Resistente' },
+  { id:'ocupado',    label:'⏳️ Ocupado' },
 ];
 
-const SCENARIO_NAMES = { referido:'Referido', frio:'Prospecção Fria', resistente:'Resistente', ocupado:'Ocupado' };
+const SCEMARIO_NAMES = { referido:'Referido', frio:'Prospecção Fria', resistente:'Resistente', ocupado:'Ocupado' };
 
 const DEFAULT_SDR = {
   id: 'sdr-marina',
   name: 'Marina',
-  weakPoints: 'Baixo senso de urgência — tende a deixar a ligação em aberto. Evita fechamentos diretos. Perfil DISC: Estável-Influente (S=34%, I=27%, C=25%, D=14%). Ponto forte: empatia e escuta ativa.'
+  weakPoints: 'Baixo senso de urgencia — tende a deixar a ligação em aberto. Evita fechamentos diretos. Perfil DISC: Estável-Influente (S=34%, I=27%, C=25%, D=14%). Ponto forte: empatia e escuta ativa.'
 };
 
 const DEFAULT_SCRIPTS = [
@@ -359,7 +404,7 @@ QUALIFICAÇÃO
 "Que legal! Me fala como é seu trabalho... Você tem apresentações com frequência? Já teve a sensação de que podia ter se expressado melhor numa reunião importante?"
 
 DOR & SPIN
-"De 1 a 10, como você avalia sua comunicação hoje? [...] E se você dominasse isso, seus resultados melhorariam? Você tem interesse em crescer pessoal e profissionalmente?"
+"De 1 a 10, como você avalia sua comunicação hoje? [...] E se você $ominasse isso, seus resultados melhorariam? Você tem interesse em crescer pessoal e profissionalmente?"
 💡 Se disser "não": "Entendo! O que te impediria de marcar pra conhecer sem compromisso?"
 
 APRESENTAÇÃO VOX
@@ -528,8 +573,131 @@ function init() {
   renderStageList();
   renderStageEvalList();
   populateSDRSelector();
+  populateAiEvalSdrSelector();
   renderScenarioTabs();
   renderScriptList();
+}
+
+// ── Avaliação de Ligação Real por IA ──
+function populateAiEvalSdrSelector() {
+  const sel = document.getElementById('aiEvalSdrSelect');
+  if (!sel) return;
+  const prev = sel.value;
+  sel.innerHTML = getSDRs().map(s => `<option value="${escHtml(s.id)}">${escHtml(s.name)}</option>`).join('');
+  if (prev) sel.value = prev;
+}
+
+async function evaluateTranscript() {
+  const transcript = document.getElementById('transcriptInput').value.trim();
+  if (!transcript) { alert('Cole a transcrição antes de avaliar.'); return; }
+
+  const sel = document.getElementById('aiEvalSdrSelect');
+  const sdrId = sel ? sel.value : null;
+  const sdr = getSDRs().find(s => s.id === sdrId) || getSDRs()[0] || DEFAULT_SDR;
+
+  const btn = document.getElementById('btnEvalTranscript');
+  btn.disabled = true;
+  btn.textContent = '⏳ Analisando...';
+
+  const resultDiv = document.getElementById('aiEvalResult');
+  resultDiv.hidden = false;
+  resultDiv.innerHTML = `<div style="display:flex;align-items:center;gap:8px;color:#6b7280;font-size:14px"><div class="loading-dots"><span></span><span></span><span></span></div> O coach está lendo a ligação...</div>`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: 'evaluate_call',
+        transcript,
+        sdrName: sdr.name,
+        sdrWeakPoints: sdr.weakPoints || ''
+      })
+    });
+    const data = await res.json();
+
+    if (data.evaluation) {
+      renderAiEvalResult(data.evaluation, sdr);
+    } else if (data.content) {
+      resultDiv.innerHTML = `<div class="ai-overall"><div class="ai-overall-label">📊 ANÁLISE DO COACH</div>${escHtml(data.content).replace(/\n/g,'<br>')}</div>`;
+    } else {
+      resultDiv.innerHTML = `<div style="color:#dc2626;font-size:13px">Erro: ${escHtml(data.error || 'Resposta inválida')}</div>`;
+    }
+  } catch(e) {
+    resultDiv.innerHTML = `<div style="color:#dc2626;font-size:13px">❌ Erro de conexão. Verifique o servidor.</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔍 Avaliar com IA';
+}
+
+function renderAiEvalResult(ev, sdr) {
+  const resultDiv = document.getElementById('aiEvalResult');
+  const stars = n => {
+    if (n === 0) return `<span class="s zero" title="Não executada"></span>`;
+    return [1,2,3].map(i => `<span class="s ${i <= n ? 'filled' : 'empty'}"></span>`).join('');
+  };
+  const resultColor = ev.result && ev.result.includes('✅') ? 'green' : ev.result && ev.result.includes('📅') ? 'yellow' : 'red';
+
+  const stagesHtml = (ev.stages || []).map(s => `
+    <div class="ai-stage-row">
+      <div class="ai-stage-score">${stars(s.score)}</div>
+      <div class="ai-stage-name">${escHtml(s.name)}</div>
+      <div class="ai-stage-comment">${escHtml(s.comment || '').replace(/\n/g,'<br>')}</div>
+    </div>`).join('');
+
+  const avgScore = (ev.stages || []).filter(s => s.score > 0).length
+    ? ((ev.stages || []).reduce((a,s) => a + s.score, 0) / (ev.stages || []).length).toFixed(1)
+    : '—';
+
+  resultDiv.innerHTML = `
+    <div class="ai-eval-result-header">
+      <span class="ai-eval-result-title">📊 Resultado da Análise — ${escHtml(sdr.name)}</span>
+      <span class="badge ${resultColor}">${escHtml(ev.result || '—')}</span>
+      <span class="badge gray">Média ${avgScore}/3</span>
+    </div>
+    ${stagesHtml}
+    <div class="ai-overall">
+      <div class="ai-overall-label">💬 FEEDBACK DO COACH</div>
+      ${escHtml(ev.overall || '').replace(/\n/g,'<br>')}
+    </div>
+    <div class="ai-save-row">
+      <label>Salvar no histórico como:</label>
+      <input type="text" id="aiEvalSaveName" placeholder="Nome do prospect (opcional)">
+      <button class="btn btn-success btn-sm" onclick="saveAiEvalToHistory(${JSON.stringify(JSON.stringify({ev, sdrName: sdr.name}))})">💾 Salvar</button>
+    </div>`;
+}
+
+function saveAiEvalToHistory(jsonStr) {
+  try {
+    const { ev, sdrName } = JSON.parse(jsonStr);
+    const name = document.getElementById('aiEvalSaveName')?.value.trim() || 'Ligação avaliada por IA';
+    const stages = (ev.stages || []).map(s => ({ id: s.id, name: s.name, stars: s.score, note: s.comment || '' }));
+    const rated = stages.filter(s => s.stars > 0);
+    const avg = rated.length ? (rated.reduce((a,s) => a + s.stars, 0) / rated.length).toFixed(1) : '0.0';
+    const record = {
+      id: Date.now(),
+      date: new Date().toLocaleDateString('pt-BR'),
+      name,
+      prof: sdrName || '',
+      type: 'Ligação Real (IA)',
+      result: ev.result || '—',
+      obs: ev.overall || '',
+      stages,
+      avg
+    };
+    const saved = JSON.parse(localStorage.getItem('vox_evals') || '[]');
+    saved.unshift(record);
+    localStorage.setItem('vox_evals', JSON.stringify(saved));
+    alert('✅ Salvo no histórico!');
+  } catch(e) { alert('Erro ao salvar.'); }
+}
+
+function clearTranscript() {
+  document.getElementById('transcriptInput').value = '';
+  const resultDiv = document.getElementById('aiEvalResult');
+  resultDiv.hidden = true;
+  resultDiv.innerHTML = '';
 }
 
 // ── Tabs ──
@@ -541,6 +709,7 @@ function switchTab(t) {
   if (t === 'hist') renderHistory();
   if (t === 'sdrs') renderSDRList();
   if (t === 'roteiro') { renderScenarioTabs(); renderScriptList(); }
+  if (t === 'eval') populateAiEvalSdrSelector();
 }
 
 // ── SDR Selector ──
@@ -875,7 +1044,7 @@ function renderScriptList() {
 
 function newScript() {
   editingScriptId = null;
-  document.getElementById('editorHeading').textContent = 'Novo Roteiro';
+  document.getElementById('editorHeading').textContent = 'Novo Roteiro7;
   document.getElementById('editorTitleInput').value = SCENARIO_NAMES[currentScenario] + ' — Novo';
   document.getElementById('editorContent').value = '';
   document.getElementById('scriptEditorPanel').hidden = false;
