@@ -9,26 +9,25 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
 
-  .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
-  .header-left h1 { font-size: 20px; font-weight: 700; }
-  .header-left p { font-size: 13px; color: #8892b0; margin-top: 3px; }
-  .header-right { font-size: 12px; color: #64748b; }
+  .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 18px 24px; display: flex; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 700; }
+  .header p { font-size: 13px; color: #8892b0; margin-top: 3px; }
 
   .tabs { display: flex; background: white; border-bottom: 2px solid #e8eaf0; padding: 0 24px; }
-  .tab { padding: 14px 20px; font-size: 14px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+  .tab { padding: 14px 16px; font-size: 14px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; }
   .tab.active { color: #7c3aed; border-bottom-color: #7c3aed; }
   .tab:hover:not(.active) { color: #374151; }
 
   .content { padding: 20px 24px; max-width: 980px; margin: 0 auto; }
 
   /* ── SIMULAÇÃO ── */
-  .sim-layout { display: grid; grid-template-columns: 1fr 260px; gap: 16px; height: calc(100vh - 195px); min-height: 520px; }
-
+  .sim-layout { display: grid; grid-template-columns: 1fr 260px; gap: 16px; height: calc(100vh - 210px); min-height: 520px; }
   .chat-panel { background: white; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
-  .chat-config { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: #fafafa; }
+  .chat-config { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: #fafafa; }
   .chat-config label { font-size: 12px; font-weight: 600; color: #6b7280; }
   .chat-config select, .chat-config input { font-size: 13px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 10px; color: #1a1a2e; background: white; }
-  .btn { border: none; border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .config-sep { width: 1px; height: 22px; background: #e5e7eb; margin: 0 2px; }
+  .btn { border: none; border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
   .btn-primary { background: #7c3aed; color: white; }
   .btn-primary:hover { background: #6d28d9; }
   .btn-danger { background: #ef4444; color: white; }
@@ -37,20 +36,23 @@
   .btn-dark:hover { background: #0f172a; }
   .btn-gray { background: #f3f4f6; color: #374151; }
   .btn-gray:hover { background: #e5e7eb; }
+  .btn-success { background: #22c55e; color: white; }
+  .btn-success:hover { background: #16a34a; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
 
   .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
   .msg { max-width: 82%; display: flex; flex-direction: column; gap: 3px; }
-  .msg.marina { align-self: flex-end; }
+  .msg.sdr { align-self: flex-end; }
   .msg.prospect { align-self: flex-start; }
   .msg.system { align-self: center; max-width: 94%; }
+  .msg.feedback { align-self: center; max-width: 94%; }
   .msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
-  .msg.marina .msg-bubble { background: #7c3aed; color: white; border-bottom-right-radius: 4px; }
+  .msg.sdr .msg-bubble { background: #7c3aed; color: white; border-bottom-right-radius: 4px; }
   .msg.prospect .msg-bubble { background: #f0f2f5; color: #1a1a2e; border-bottom-left-radius: 4px; }
   .msg.system .msg-bubble { background: #fef9c3; color: #78350f; font-size: 13px; border-radius: 10px; text-align: center; }
   .msg.feedback .msg-bubble { background: #ede9fe; color: #4c1d95; font-size: 13px; border-radius: 10px; white-space: pre-wrap; }
-  .msg.feedback { align-self: center; max-width: 94%; }
   .msg-label { font-size: 11px; font-weight: 600; color: #9ca3af; }
-  .msg.marina .msg-label { text-align: right; }
+  .msg.sdr .msg-label { text-align: right; }
 
   .chat-input { padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; gap: 10px; }
   .chat-input textarea { flex: 1; font-size: 14px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 14px; resize: none; font-family: inherit; line-height: 1.4; min-height: 46px; max-height: 120px; }
@@ -67,7 +69,6 @@
   .stage-name { font-size: 12px; font-weight: 600; color: #374151; }
   .stage-item.done .stage-name { color: #15803d; }
   .stage-desc { font-size: 11px; color: #9ca3af; margin-top: 1px; line-height: 1.3; }
-
   .score-box { background: #f9fafb; border-radius: 10px; padding: 14px; text-align: center; margin-top: auto; border: 1px solid #e5e7eb; }
   .score-num { font-size: 30px; font-weight: 800; color: #7c3aed; }
   .score-label { font-size: 12px; color: #6b7280; margin-top: 2px; }
@@ -80,7 +81,6 @@
   .field label { font-size: 12px; font-weight: 600; color: #6b7280; }
   .field input, .field select, .field textarea { font-size: 14px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-family: inherit; color: #1a1a2e; background: #f9fafb; }
   .field textarea { resize: vertical; min-height: 80px; }
-
   .stage-eval-item { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
   .stage-eval-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .stage-eval-name { font-size: 13px; font-weight: 600; }
@@ -115,14 +115,42 @@
   .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
 
   /* ── ROTEIRO ── */
-  .roteiro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .roteiro-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .roteiro-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #7c3aed; }
-  .roteiro-etapa { margin-bottom: 16px; }
-  .etapa-num { display: inline-block; background: #7c3aed; color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
-  .etapa-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .etapa-script { font-size: 13px; color: #374151; line-height: 1.6; background: #f9fafb; padding: 10px 12px; border-radius: 8px; border-left: 3px solid #7c3aed; }
-  .etapa-dica { font-size: 12px; color: #7c3aed; margin-top: 6px; font-weight: 600; }
+  .scenario-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .scenario-tab { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 2px solid #e5e7eb; color: #6b7280; background: white; transition: all 0.2s; }
+  .scenario-tab.active { background: #7c3aed; border-color: #7c3aed; color: white; }
+  .scenario-tab:hover:not(.active) { border-color: #7c3aed; color: #7c3aed; }
+
+  .script-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .script-item { background: white; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; border: 2px solid transparent; }
+  .script-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .script-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .script-badge.aprovado { background: #dcfce7; color: #15803d; }
+  .script-badge.rascunho { background: #f3f4f6; color: #6b7280; }
+  .script-title { font-size: 14px; font-weight: 600; color: #1a1a2e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .script-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  .script-editor-panel { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; border: 2px solid #7c3aed; }
+  .script-editor-panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: #7c3aed; }
+  .editor-title-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+  .editor-title-row label { font-size: 12px; font-weight: 600; color: #6b7280; white-space: nowrap; }
+  .editor-title-input { flex: 1; font-size: 14px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-family: inherit; }
+  .editor-content { width: 100%; font-size: 13px; font-family: 'Courier New', monospace; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; line-height: 1.7; resize: vertical; min-height: 280px; background: #fafafa; color: #1a1a2e; }
+  .editor-content:focus { outline: none; border-color: #7c3aed; }
+  .editor-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .empty-scripts { text-align: center; padding: 40px 20px; color: #9ca3af; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-size: 14px; }
+
+  /* ── SDRs ── */
+  .sdrs-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .sdrs-section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #374151; }
+  .sdr-list { display: flex; flex-direction: column; gap: 10px; }
+  .sdr-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .sdr-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .sdr-name { font-size: 16px; font-weight: 700; }
+  .sdr-card-actions { display: flex; gap: 6px; }
+  .sdr-weak-points { font-size: 13px; color: #6b7280; line-height: 1.5; }
+  .sdr-form-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 2px solid #7c3aed; }
+  .sdr-form-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; color: #7c3aed; }
+  .sdr-textarea { width: 100%; font-size: 14px; font-family: inherit; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; background: #f9fafb; resize: vertical; min-height: 120px; }
 
   .loading-dots { display: inline-flex; gap: 4px; padding: 4px 0; }
   .loading-dots span { width: 7px; height: 7px; border-radius: 50%; background: #9ca3af; animation: bounce 1.2s infinite; }
@@ -135,16 +163,18 @@
   @media (max-width: 700px) {
     .sim-layout { grid-template-columns: 1fr; }
     .stage-panel { max-height: 220px; }
-    .eval-grid, .roteiro-grid { grid-template-columns: 1fr; }
+    .eval-grid, .sdrs-layout { grid-template-columns: 1fr; }
+    .scenario-tabs { flex-wrap: wrap; }
+    .tab { padding: 12px 10px; font-size: 13px; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-left">
-    <h1>🎙️ SDR Trainer — Vox2You</h1>
-    <p>Simulação de ligação com IA · Avaliação · Roteiro</p>
+  <div>
+    <h1>😙️ SDR Trainer — Vox2You</h1>
+    <p>Simulação · Roteiros · Avaliação · Histórico</p>
   </div>
 </div>
 
@@ -152,7 +182,8 @@
   <div class="tab active" onclick="switchTab('sim')">📞 Simulação</div>
   <div class="tab" onclick="switchTab('eval')">📋 Avaliar</div>
   <div class="tab" onclick="switchTab('hist')">📊 Histórico</div>
-  <div class="tab" onclick="switchTab('roteiro')">📖 Roteiro</div>
+  <div class="tab" onclick="switchTab('roteiro')">📖 Roteiros</div>
+  <div class="tab" onclick="switchTab('sdrs')">👥 SDRs</div>
 </div>
 
 <!-- ═══ SIMULAÇÃO ═══ -->
@@ -160,26 +191,29 @@
   <div class="sim-layout">
     <div class="chat-panel">
       <div class="chat-config">
+        <label>SDR:</label>
+        <select id="sdrSelect" style="min-width:90px"></select>
+        <div class="config-sep"></div>
         <label>Tipo:</label>
         <select id="prospectType">
-          <option value="referido">Jeferido Indicado</option>
-          <option value="frio">Prospecção Fria</option>
+          <option value="referido">Referido</option>
+          <option value="frio">Frio</option>
           <option value="resistente">Resistente</option>
-          <option value="ocupado">Ocupado/Impaciente</option>
+          <option value="ocupado">Ocupado</option>
         </select>
         <label>Nome:</label>
-        <input id="prospectName" type="text" value="Ana" style="width:80px">
+        <input id="prospectName" type="text" value="Ana" style="width:72px">
         <label>Profissão:</label>
-        <input id="prospectProf" type="text" value="Gerente comercial" style="width:150px">
+        <input id="prospectProf" type="text" value="Gerente comercial" style="width:140px">
         <button class="btn btn-primary" id="btnStart" onclick="startSession()">▶ Iniciar</button>
         <button class="btn btn-danger" id="btnEnd" onclick="endSession()" hidden>■ Encerrar</button>
         <button class="btn btn-dark" id="btnFeedback" onclick="getFeedback()" hidden>💡 Avaliação</button>
       </div>
       <div class="messages" id="messages">
-        <div class="msg system"><div class="msg-bubble">Configure o perfil do prospect acima e clique em <strong>Iniciar</strong> para começar a simulação. Digite suas falas como se estivesse numa ligação real.</div></div>
+        <div class="msg system"><div class="msg-bubble">Selecione o SDR e o tipo de prospect, depois clique em <strong>Iniciar</strong> para começar.</div></div>
       </div>
       <div class="chat-input">
-        <textarea id="userInput" placeholder="Digite o que você diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
+        <textarea id="userInput" placeholder="Digite o que vocà diria na ligação... (Enter para enviar, Shift+Enter para nova linha)" disabled rows="2" onkeydown="handleKey(event)"></textarea>
         <button class="btn btn-primary" id="btnSend" onclick="sendMessage()" disabled>Enviar</button>
       </div>
     </div>
@@ -231,80 +265,48 @@
   <div id="histContainer"></div>
 </div>
 
-<!-- ═══ ROTEIRO ═══ -->
+<!-- ═══ ROTEIROS ═══ -->
 <div id="tab-roteiro" class="content" hidden>
-  <div class="roteiro-grid">
-    <div class="roteiro-card">
-      <h3>📞 Roteiro — Referido Indicado</h3>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">1</div>
-        <div class="etapa-title">Abertura</div>
-        <div class="etapa-script">"Alô [Nome], bom dia! Meu nome é Marina, da Vox2You. Você pode falar? Quem pediu pra eu ligar foi o [Indicador] — lembra quem é?"</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">2</div>
-        <div class="etapa-title">Rapport com Indicador</div>
-        <div class="etapa-script">"o [Indicador] esteve comigo conhecendo nosso treinamento e achou fantástico. Ele te indicou porque acha que você também tem interesse em desenvolver sua comunicação. Você faz o quê?"</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">3</div>
-        <div class="etapa-title">Qualificação</div>
-        <div class="etapa-script">"Que legal! Me fala como é seu trabalho... Você tem apresentações com frequência? Já teve a sensação de que podia ter se expressado melhor numa reunião importante?"</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">4</div>
-        <div class="etapa-title">Dor & SPIN</div>
-        <div class="etapa-script">"De 1 a 10, como você avalia sua comunicação hoje? [...] E se você dominasse isso, seus resultados melhorariam? [...] Você tem interesse em crescer pessoal e profissionalmente?"</div>
-        <div class="etapa-dica">💡 Se responder "não": entender motivo → oferecer aula grátis / workshop</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">5</div>
-        <div class="etapa-title">Apresentação Vox</div>
-        <div class="etapa-script">"A Vox2You é a maior rede de escolas de oratória da América Latina. Mais de 90 mil alunos, treinamento presencial e 100% prático — oratória, PNL, inteligência emocional."</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">6</div>
-        <div class="etapa-title">Marcação — Dupla Opção</div>
-        <div class="etapa-script">"Vou marcar uma consultoria de 20 minutinhos pra você conhecer o método — sem compromisso. Mas antes: você toma suas decisões sozinho(a) ou compartilha com alguém? [...] Tenho quinta às 14h ou sexta às 10h. Qual encaixa melhor?"</div>
-        <div class="etapa-dica">⚠️ NUNCA perguntar "quando você pode?" — sempre dupla opção fechada</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">7</div>
-        <div class="etapa-title">Assentamento</div>
-        <div class="etapa-script">"[Nome], confirmando: nossa consultoria está marcada pra [dia] às [hora]. Eu travelei minha agenda e honro minha palavra — posso contar com a sua presença? Anota aí, porque eu já travei! Te mando o endereço/link agora."</div>
-        <div class="etapa-dica">💡 Aguarde a confirmação verbal. Não encerre sem ela.</div>
-      </div>
+  <div class="scenario-tabs" id="scenarioTabs"></div>
+  <div id="scriptEditorPanel" class="script-editor-panel" hidden>
+    <h3 id="editorHeading">Editar Roteiro</h3>
+    <div class="editor-title-row">
+      <label>Título:</label>
+      <input type="text" id="editorTitleInput" class="editor-title-input" placeholder="Ex: Referido — Versão Padrão">
     </div>
+    <textarea id="editorContent" class="editor-content" placeholder="Escreva o roteiro completo aqui...&#10;&#10;Dica: use [SDR] onde o nome do SDR deve aparecer, e [Nome] para o nome do prospect."></textarea>
+    <div class="editor-actions">
+      <button class="btn btn-gray" onclick="cancelScriptEdit()">Cancelar</button>
+      <button class="btn btn-dark" onclick="saveScript('rascunho')">💾 Salvar Rascunho</button>
+      <button class="btn btn-success" onclick="saveScript('aprovado')">✅ Aprovar e Salvar</button>
+    </div>
+  </div>
+  <div id="scriptList" class="script-list"></div>
+  <button class="btn btn-primary" onclick="newScript()" style="margin-top:4px">+ Novo Roteiro</button>
+</div>
 
-    <div class="roteiro-card">
-      <h3>❄️ Roteiro — Prospecção Fria</h3>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">1</div>
-        <div class="etapa-title">Abertura Quente</div>
-        <div class="etapa-script">"Oi [Nome]! Tá feliz hoje?" [...] "Que bom! Você ainda não me conhece — sou a Marina, da Vox2You: fale, comunique, transforme."</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">2</div>
-        <div class="etapa-title">Desarmamento</div>
-        <div class="etapa-script">"Eu sei que você não acordou hoje pensando 'quero um curso de oratória' — então meu objetivo não é esse agora. Estou fazendo uma pesquisinha rápida. São 3 minutinhos. Pode me ajudar?"</div>
-        <div class="etapa-dica">💡 Anti-venda proposital — desativa a defesa. Tom genuíno e leve.</div>
-      </div>
-      <div class="roteiro-etapa">
-        <div class="etapa-num">3–7</div>
-        <div class="etapa-title">Qualificação → Assentamento</div>
-        <div class="etapa-script">A partir daqui, seguir o mesmo fluxo do Referido: profissão → dor → apresentação → dupla opção → assentamento.</div>
-      </div>
-
-      <div style="margin-top: 24px; padding: 16px; background: #fef3c7; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #92400e;">⚠️ Pontos de Atenção — Marina</div>
-        <div style="font-size: 13px; color: #78350f; line-height: 1.7;">
-          <strong>Baixo Senso de Urgência (32pts)</strong><br>
-          Não deixe a ligação "em aberto". Se a pessoa disser "vou pensar", use:<br>
-          <em>"Entendo! O que te impediria de marcar agora pra conhecer sem compromisso?"</em><br><br>
-          <strong>Assentamento com firmeza</strong><br>
-          Após marcar, não encerre sem a confirmação verbal. Aguarde.<br><br>
-          <strong>Sua superpotência é a empatia</strong><br>
-          Use a escuta ativa. Deixe a pessoa falar. Quanto mais ela fala, mais ela se convence.
+<!-- ═══ SDRs ═══ -->
+<div id="tab-sdrs" class="content" hidden>
+  <div class="sdrs-layout">
+    <div>
+      <div class="sdrs-section-title">SDRs cadastrados</div>
+      <div id="sdrList" class="sdr-list"></div>
+      <button class="btn btn-primary" onclick="newSDR()" style="margin-top:12px">+ Adicionar SDR</button>
+    </div>
+    <div id="sdrFormPanel" hidden>
+      <div class="sdr-form-card">
+        <h3 id="sdrFormTitle">Novo SDR</h3>
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" id="sdrNameInput" placeholder="Ex: Marina">
+        </div>
+        <div class="field">
+          <label>Perfil / Pontos fracos</label>
+          <textarea id="sdrWeakInput" class="sdr-textarea" placeholder="Ex: Baixo senso de urgência. Evita fechamentos diretos. DISC: Estável-Influente."></textarea>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn btn-gray" onclick="cancelSDREdit()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveSDR()">💾 Salvar</button>
         </div>
       </div>
     </div>
@@ -320,35 +322,237 @@
 const API_URL = '/api/chat';
 
 const STAGES = [
-  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',          kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece','alô'] },
-  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',    kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
-  { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',               kw:['trabalha com','faz o que','profiss','área','o que você faz','me conta','sua atividade'] },
-  { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10',  kw:['ansioso','apresentação','resultado','comunicação','expres','influên','1 a 10','poderia ter','reunião','negociação'] },
-  { id:'pitch',        name:'5. Apresentação',    desc:'Vox, 90 mil alunos, método',        kw:['90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático','vox2you'] },
-  { id:'marcacao',     name:'6. Marcação',        desc:'Consultoria com dupla opção',       kw:['consultoria','20 minuto','40 minuto','quinta','sexta','segunda','terça','online','presencial','escola','tenho horário'] },
-  { id:'assentamento', name:'7. Assentamento',    desc:'Confirmar compromisso firme',       kw:['confirmando','travei','honro','posso contar','anota','whatsapp','até lá','endereço'] },
+  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',         kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece','alô'] },
+  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',   kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
+  { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',             kw:['trabalha com','faz o que','profiss','área','o que você faz','me conta','sua atividade'] },
+  { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10', kw:['ansioso','apresentação','resultado','comunicação','expres','influên','1 a 10','poderia ter','reunião','negociação'] },
+  { id:'pitch',        name:'5. Apresentação',    desc:'Vox, 90 mil alunos, método',       kw:['90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático','vox2you'] },
+  { id:'marcacao',     name:'6. Marcação',        desc:'Consultoria com dupla opção',      kw:['consultoria','20 minuto','40 minuto','quinta','sexta','segunda','terça','online','presencial','escola','tenho horário'] },
+  { id:'assentamento', name:'7. Assentamento',    desc:'Confirmar compromisso firme',      kw:['confirmando','travei','honro','posso contar','anota','whatsapp','até lá','endereço'] },
 ];
 
+const SCENARIOS = [
+  { id:'referido',   label:'📞 Referido' },
+  { id:'frio',       label:'❄️ Frio' },
+  { id:'resistente', label:'😤 Resistente' },
+  { id:'ocupado',    label:'⏱️ Ocupado' },
+];
+
+const SCENARIO_NAMES = { referido:'Referido', frio:'Prospecção Fria', resistente:'Resistente', ocupado:'Ocupado' };
+
+const DEFAULT_SDR = {
+  id: 'sdr-marina',
+  name: 'Marina',
+  weakPoints: 'Baixo senso de urgência — tende a deixar a ligação em aberto. Evita fechamentos diretos. Perfil DISC: Estável-Influente (S=34%, I=27%, C=25%, D=14%). Ponto forte: empatia e escuta ativa.'
+};
+
+const DEFAULT_SCRIPTS = [
+  {
+    id: 'ref-v1', scenarioId: 'referido', title: 'Referido — Padrão', status: 'aprovado',
+    content: `ABERTURA
+"Alô [Nome], bom dia! Meu nome é [SDR], da Vox2You. Você pode falar um minutinho? Quem pediu pra eu ligar foi o [Indicador] — lembra quem é?"
+
+RAPPORT
+"O [Indicador] esteve comigo conhecendo nosso treinamento e achou fantástico. Ele te indicou porque acha que você também tem interesse em desenvolver sua comunicação. Você faz o quê hoje?"
+
+QUALIFICAÇÃO
+"Que legal! Me fala como é seu trabalho... Você tem apresentações com frequência? Já teve a sensação de que podia ter se expressado melhor numa reunião importante?"
+
+DOR & SPIN
+"De 1 a 10, como você avalia sua comunicação hoje? [...] E se você dominasse isso, seus resultados melhorariam? Você tem interesse em crescer pessoal e profissionalmente?"
+💡 Se disser "não": "Entendo! O que te impediria de marcar pra conhecer sem compromisso?"
+
+APRESENTAÇÃO VOX
+"A Vox2You é a maior rede de escolas de oratória da América Latina. Mais de 90 mil alunos, treinamento presencial e 100% prático — oratória, PNL, inteligência emocional."
+
+MARCAÇÃO — DUPLA OPÇÃO
+"Vou marcar uma consultoria de 20 minutinhos pra você conhecer o método — sem compromisso. Mas antes: você toma suas decisões sozinho(a) ou compartilha com alguém? Tenho quinta às 14h ou sexta às 10h. Qual encaixa melhor?"
+⚠️ NUNCA perguntar "quando você pode?" — sempre dupla opção fechada
+
+ASSENTAMENTO
+"[Nome], confirmando: nossa consultoria está marcada pra [dia] às [hora]. Eu travei minha agenda e honro minha palavra — posso contar com a sua presença? Anota aí! Te mando o endereço/link agora."
+💡 Aguarde a confirmação verbal. Não encerre sem ela.`
+  },
+  {
+    id: 'ref-v2', scenarioId: 'referido', title: 'Referido — Versão Direta', status: 'rascunho',
+    content: `ABERTURA DIRETA
+"Oi [Nome]! Sou [SDR] da Vox2You. Tô ligando porque o [Indicador] me pediu especificamente pra falar com você. São 3 minutinhos — pode?"
+
+QUALIFICAÇÃO RÁPIDA
+"Você trabalha com vendas ou apresentações? [...] E como você avalia sua comunicação de 1 a 10?"
+
+PITCH RÁPIDO
+"A Vox2You ajuda profissionais como você a dominar a comunicação. 90 mil alunos, método 100% prático — indicado pelo [Indicador], que já viu resultado."
+
+FECHAMENTO DIRETO
+"Tenho dois horários disponíveis essa semana: quarta às 15h ou quinta às 10h. Qual desses encaixa melhor?"
+
+ASSENTAMENTO
+"Ótimo! [Dia] às [hora] está travado aqui. Pode contar comigo — te mando a confirmação agora."
+💡 Use para prospects que sinalizaram pouco tempo disponível.`
+  },
+  {
+    id: 'frio-v1', scenarioId: 'frio', title: 'Frio — Anti-Venda (Padrão)', status: 'aprovado',
+    content: `ABERTURA DESARMANTE
+"Oi [Nome]! Tá feliz hoje?" [...] "Que bom! Você ainda não me conhece — sou [SDR], da Vox2You: fale, comunique, transforme."
+
+DESARMAMENTO
+"Eu sei que você não acordou hoje pensando 'quero um curso de oratória' — então meu objetivo não é esse agora. Estou fazendo uma pesquisinha rápida. São 3 minutinhos. Pode me ajudar?"
+💡 Anti-venda proposital — desativa a defesa. Tom genuíno e leve.
+
+QUALIFICAÇÃO
+"Você trabalha com vendas, apresentações, liderança? Me conta mais sobre o que você faz."
+
+DOR & SPIN
+"De 1 a 10, como você se sente quando precisa falar em público ou liderar uma reunião? O que aconteceria se você fosse ainda mais confiante nisso?"
+
+APRESENTAÇÃO
+"A Vox2You é a maior rede de oratória da América Latina. 90 mil alunos, método presencial e prático."
+
+MARCAÇÃO
+"Tenho uma consultoria gratuita de 20 minutos — pra você conhecer sem nenhum compromisso. Você prefere [dia1] às [hora1] ou [dia2] às [hora2]?"
+
+ASSENTAMENTO
+"Perfeito! [Dia] às [hora] está na minha agenda. Honro minha palavra — posso contar com a sua presença? Te mando o endereço agora."`
+  },
+  {
+    id: 'frio-v2', scenarioId: 'frio', title: 'Frio — Com Urgência', status: 'rascunho',
+    content: `ABERTURA COM ENERGIA
+"[Nome], oi! Sou [SDR] da Vox2You. Você tem 3 minutinhos agora?"
+
+CONTEXTO + URGÊNCIA
+"Ótimo! Estou ligando porque temos uma turma nova abrindo essa semana e quero que você conheça antes de fechar as vagas."
+
+QUALIFICAÇÃO EXPRESSA
+"Você trabalha com o quê? [...] E comunicação é importante na sua área?"
+
+SPIN
+"Se você pudesse se comunicar com mais confiança e clareza, o que mudaria nos seus resultados?"
+
+PITCH + URGÊNCIA
+"A Vox2You tem 90 mil alunos — maior rede de oratória do Brasil. As vagas são limitadas. Tenho uma consultoria grátis ainda essa semana."
+
+FECHAMENTO
+"Tenho quinta às 14h ou sexta às 10h — qual encaixa melhor? As vagas estão preenchendo rápido."
+
+ASSENTAMENTO
+"[Dia] às [hora] está travado! Te mando a confirmação agora."`
+  },
+  {
+    id: 'res-v1', scenarioId: 'resistente', title: 'Resistente — Padrão', status: 'rascunho',
+    content: `ABERTURA (COM RESISTÊNCIA)
+"[Nome], sei que você está ocupado(a) — são literalmente 2 minutos. Prometo que vale."
+
+SE DISSER "não tenho interesse":
+"Entendo! Antes de desligar — o que seria o cenário ideal pra você querer conhecer o que a Vox2You faz? Só curiosidade."
+
+REFRAME
+"Na verdade não é sobre cursos — é sobre resultados. A Vox2You treina comunicação pra quem já é bom e quer ser excelente."
+
+QUALIFICAÇÃO REVERSA
+"Você está satisfeito 100% com a forma como se comunica hoje? [...] Então existe espaço pra crescer."
+
+SPIN COM CONCRETUDE
+"Pensa numa situação recente onde uma comunicação mais precisa teria mudado o resultado. Isso é exatamente o que a Vox2You resolve."
+
+CONSULTORIA SEM COMPROMISSO
+"Não vou te vender nada agora. Só quero que você veja o método pessoalmente — 20 minutos. Quinta às 14h ou sexta às 10h?"
+
+ASSENTAMENTO FIRME
+"Perfeito. [Dia] às [hora]. Anota aí — eu já travei aqui."`
+  },
+  {
+    id: 'ocu-v1', scenarioId: 'ocupado', title: 'Ocupado — Ultra-Rápido', status: 'rascunho',
+    content: `ABERTURA ULTRA-RÁPIDA
+"[Nome], 2 minutinhos?" [...] "Ótimo! Sou [SDR] da Vox2You — sei que você é ocupado(a), então vou direto."
+
+QUALIFICAÇÃO EM 1 PERGUNTA
+"Você trabalha com apresentações ou vendas no dia a dia?"
+
+PITCH EM 2 FRASES
+"A Vox2You é a maior rede de oratória do Brasil — 90 mil alunos, método 100% prático. Resultados reais em comunicação e liderança."
+
+MARCAÇÃO ULTRA-DIRETA
+"Quero apenas 20 minutos da sua semana — consultoria sem compromisso. Quinta às 14h ou sexta às 10h. Qual dá?"
+
+ASSENTAMENTO RÁPIDO
+"Excelente! [Dia] às [hora]. Te mando a confirmação agora. Obrigado(a) pela atenção!"`
+  },
+];
+
+// ── Estado ──
 let sessionActive = false;
 let stagesDone = new Set();
 let chatMessages = [];
 const starValues = {};
+let currentScenario = 'referido';
+let editingScriptId = null;
+let editingSDRId = null;
 
+// ── Dados (localStorage) ──
+function loadSDRs() {
+  try { const d = localStorage.getItem('vox_sdrs'); return d ? JSON.parse(d) : null; } catch { return null; }
+}
+function saveSDRs(sdrs) {
+  try { localStorage.setItem('vox_sdrs', JSON.stringify(sdrs)); } catch {}
+}
+function getSDRs() {
+  return loadSDRs() || [Object.assign({}, DEFAULT_SDR)];
+}
+
+function loadScripts() {
+  try { const d = localStorage.getItem('vox_scripts'); return d ? JSON.parse(d) : null; } catch { return null; }
+}
+function saveScripts(scripts) {
+  try { localStorage.setItem('vox_scripts', JSON.stringify(scripts)); } catch {}
+}
+function getScripts() {
+  return loadScripts() || JSON.parse(JSON.stringify(DEFAULT_SCRIPTS));
+}
+
+function getSelectedSDR() {
+  const sdrs = getSDRs();
+  const sel = document.getElementById('sdrSelect');
+  const id = sel ? sel.value : null;
+  return sdrs.find(s => s.id === id) || sdrs[0] || DEFAULT_SDR;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──
 function init() {
+  if (!loadSDRs()) saveSDRs([Object.assign({}, DEFAULT_SDR)]);
+  if (!loadScripts()) saveScripts(JSON.parse(JSON.stringify(DEFAULT_SCRIPTS)));
   renderStageList();
   renderStageEvalList();
+  populateSDRSelector();
+  renderScenarioTabs();
+  renderScriptList();
 }
 
 // ── Tabs ──
 function switchTab(t) {
-  ['sim','eval','hist','roteiro'].forEach((id, i) => {
+  ['sim','eval','hist','roteiro','sdrs'].forEach((id, i) => {
     document.getElementById('tab-'+id).hidden = id !== t;
     document.querySelectorAll('.tab')[i].classList.toggle('active', id === t);
   });
   if (t === 'hist') renderHistory();
+  if (t === 'sdrs') renderSDRList();
+  if (t === 'roteiro') { renderScenarioTabs(); renderScriptList(); }
 }
 
-// ── Stage UI ──
+// ── SDR Selector ──
+function populateSDRSelector() {
+  const sel = document.getElementById('sdrSelect');
+  if (!sel) return;
+  const prev = sel.value;
+  sel.innerHTML = getSDRs().map(s => `<option value="${escHtml(s.id)}">${escHtml(s.name)}</option>`).join('');
+  if (prev) sel.value = prev;
+}
+
+// ── Etapas ──
 function renderStageList() {
   document.getElementById('stageList').innerHTML = STAGES.map(s =>
     `<div class="stage-item" id="si-${s.id}">
@@ -370,9 +574,7 @@ function updateStages() {
 function detectStages(text) {
   const lower = text.toLowerCase();
   STAGES.forEach(s => {
-    if (!stagesDone.has(s.id) && s.kw.some(k => lower.includes(k))) {
-      stagesDone.add(s.id);
-    }
+    if (!stagesDone.has(s.id) && s.kw.some(k => lower.includes(k))) stagesDone.add(s.id);
   });
   updateStages();
 }
@@ -393,14 +595,15 @@ function startSession() {
   const type = document.getElementById('prospectType').value;
   const name = document.getElementById('prospectName').value || 'Ana';
   const prof = document.getElementById('prospectProf').value || 'profissional';
+  const sdr = getSelectedSDR();
 
   const intros = {
-    referido: `📞 ${name} atendeu — ela é ${prof}, foi indicada por uma conhecida sua. Está receptiva mas não sabe quem você é.`,
-    frio:     `📞 ${name} atendeu com um "alô?" neutro. Não te conhece, não esperava sua ligação.`,
-    resistente:`📞 ${name} atendeu com tom impaciente: "Alô, pode ser rápido, tô ocupada."`,
-    ocupado:  `📞 ${name} atendeu correndo: "Alô, pode falar rápido?"`
+    referido:   `📞 ${name} atendeu — é ${prof}, foi indicada por uma conhecida. Está receptiva mas não sabe quem você é.`,
+    frio:       `📞 ${name} atendeu com "alô?" neutro. Não te conhece, não esperava a ligação.`,
+    resistente: `📞 ${name} atendeu impaciente: "Alô, pode ser rápido?"`,
+    ocupado:    `📞 ${name} atendeu correndo: "Alô, pode falar rápido?"`
   };
-  addMsg('system', intros[type] || intros.referido);
+  addMsg('system', `${intros[type] || intros.referido}\n\nVocê é ${sdr.name}. Boa sorte!`);
   document.getElementById('userInput').focus();
 }
 
@@ -422,9 +625,10 @@ async function sendMessage() {
   inp.value = '';
   inp.style.height = '';
 
-  addMsg('marina', text, 'Marina');
+  const sdr = getSelectedSDR();
+  addMsg('sdr', text, sdr.name);
   detectStages(text);
-  chatMessages.push({ role: 'user', content: `[SDR Marina]: ${text}` });
+  chatMessages.push({ role: 'user', content: `[SDR ${sdr.name}]: ${text}` });
 
   const loadId = addLoading();
   try {
@@ -436,7 +640,9 @@ async function sendMessage() {
         messages: chatMessages,
         prospectName: document.getElementById('prospectName').value || 'Ana',
         prospectProf: document.getElementById('prospectProf').value || 'profissional',
-        prospectType: document.getElementById('prospectType').value
+        prospectType: document.getElementById('prospectType').value,
+        sdrName: sdr.name,
+        sdrWeakPoints: sdr.weakPoints || ''
       })
     });
     const data = await res.json();
@@ -451,18 +657,24 @@ async function sendMessage() {
 }
 
 async function getFeedback() {
+  const sdr = getSelectedSDR();
   const done = STAGES.filter(s => stagesDone.has(s.id)).map(s => s.name);
   const missing = STAGES.filter(s => !stagesDone.has(s.id)).map(s => s.name);
   document.getElementById('btnFeedback').disabled = true;
 
-  const prompt = `Avalie essa sessão de treino:\nPontuação: ${stagesDone.size}/7\n✅ Concluídas: ${done.join(', ') || 'Nenhuma'}\n❌ Faltaram: ${missing.join(', ') || 'Nenhuma'}\n\nDê feedback direto em 5 linhas.`;
+  const prompt = `Avalie a sessão de treino do SDR ${sdr.name}:\nPontuação: ${stagesDone.size}/7\n✅ Concluídas: ${done.join(', ') || 'Nenhuma'}\n❌ Faltaram: ${missing.join(', ') || 'Nenhuma'}${sdr.weakPoints ? '\n\nPerfil do SDR: ' + sdr.weakPoints : ''}\n\nDê feedback direto em até 6 linhas.`;
 
   const loadId = addLoading('feedback');
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'feedback', messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({
+        mode: 'feedback',
+        messages: [{ role: 'user', content: prompt }],
+        sdrName: sdr.name,
+        sdrWeakPoints: sdr.weakPoints || ''
+      })
     });
     const data = await res.json();
     removeLoading(loadId);
@@ -479,8 +691,8 @@ function addMsg(role, text, label) {
   const msgs = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = `msg ${role}`;
-  const lbl = label ? `<div class="msg-label">${label}</div>` : '';
-  div.innerHTML = `${lbl}<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  const lbl = label ? `<div class="msg-label">${escHtml(label)}</div>` : '';
+  div.innerHTML = `${lbl}<div class="msg-bubble">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
   return div;
@@ -493,7 +705,8 @@ function addLoading(type) {
   const div = document.createElement('div');
   div.className = 'msg prospect';
   div.id = id;
-  div.innerHTML = `<div class="msg-label">${type === 'feedback' ? 'Coach IA' : (document.getElementById('prospectName').value || 'Prospect')}</div><div class="msg-bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+  const lbl = type === 'feedback' ? 'Coach IA' : (document.getElementById('prospectName').value || 'Prospect');
+  div.innerHTML = `<div class="msg-label">${escHtml(lbl)}</div><div class="msg-bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
   return id;
@@ -530,7 +743,6 @@ function setStar(id, val) {
 function saveEval() {
   const name = document.getElementById('evalName').value.trim();
   if (!name) { alert('Informe o nome do prospect.'); return; }
-
   const stages = STAGES.map(s => ({
     id: s.id, name: s.name,
     stars: starValues[s.id] || 0,
@@ -538,25 +750,19 @@ function saveEval() {
   }));
   const rated = stages.filter(s => s.stars > 0);
   const avg = rated.length ? (rated.reduce((a,s) => a+s.stars, 0) / rated.length).toFixed(1) : '0.0';
-
   const record = {
-    id: Date.now(),
-    date: new Date().toLocaleDateString('pt-BR'),
-    name,
+    id: Date.now(), date: new Date().toLocaleDateString('pt-BR'), name,
     prof: document.getElementById('evalProf').value,
     type: document.getElementById('evalType').value,
     result: document.getElementById('evalResult').value,
     obs: document.getElementById('evalObs').value,
     stages, avg
   };
-
   try {
     const saved = JSON.parse(localStorage.getItem('vox_evals') || '[]');
     saved.unshift(record);
     localStorage.setItem('vox_evals', JSON.stringify(saved));
   } catch(e) {}
-
-  // Reset
   document.getElementById('evalName').value = '';
   document.getElementById('evalProf').value = '';
   document.getElementById('evalObs').value = '';
@@ -565,7 +771,6 @@ function saveEval() {
     document.querySelectorAll(`#stars-${s.id} .star`).forEach(el => el.classList.remove('active'));
     document.getElementById('note-'+s.id).value = '';
   });
-
   switchTab('hist');
 }
 
@@ -575,7 +780,7 @@ function renderHistory() {
   try { data = JSON.parse(localStorage.getItem('vox_evals') || '[]'); } catch(e) {}
   const container = document.getElementById('histContainer');
   if (!data.length) {
-    container.innerHTML = '<div class="hist-empty">Nenhuma avaliação salva ainda.<br><br>Faça ligações reais e avalie na aba "Avaliar".</div>';
+    container.innerHTML = '<div class="hist-empty">Nenhuma avaliação salva ainda.<br><br>Avalie ligações reais na aba "Avaliar".</div>';
     return;
   }
   container.innerHTML = data.map(r => {
@@ -584,11 +789,11 @@ function renderHistory() {
     const rb = r.result.includes('✅') ? 'green' : r.result.includes('📅') ? 'yellow' : 'gray';
     return `<div class="hist-card" onclick="showDetail(${r.id})">
       <div class="hist-header">
-        <div><div class="hist-name">${r.name}</div><div class="hist-date">${r.date} · ${r.prof || r.type}</div></div>
+        <div><div class="hist-name">${escHtml(r.name)}</div><div class="hist-date">${r.date} · ${escHtml(r.prof || r.type)}</div></div>
         <div class="hist-score">${r.avg}★</div>
       </div>
       <div class="hist-badges">
-        <span class="badge ${rb}">${r.result}</span>
+        <span class="badge ${rb}">${escHtml(r.result)}</span>
         <span class="badge ${cls}">Média ${r.avg}/3</span>
         ${r.stages.filter(s=>s.stars===3).length ? `<span class="badge green">${r.stages.filter(s=>s.stars===3).length} excelentes</span>` : ''}
         ${r.stages.filter(s=>s.stars===1).length ? `<span class="badge red">${r.stages.filter(s=>s.stars===1).length} a melhorar</span>` : ''}
@@ -604,13 +809,13 @@ function showDetail(id) {
   if (!r) return;
   const star = n => n > 0 ? '★'.repeat(n)+'☆'.repeat(3-n) : '—';
   document.getElementById('modalContent').innerHTML = `
-    <h2>${r.name}</h2>
-    <p style="color:#6b7280;font-size:13px;margin-bottom:16px">${r.date} · ${r.type} · ${r.result}</p>
+    <h2>${escHtml(r.name)}</h2>
+    <p style="color:#6b7280;font-size:13px;margin-bottom:16px">${r.date} · ${escHtml(r.type)} · ${escHtml(r.result)}</p>
     ${r.stages.map(s => `<div class="modal-stage">
       <span style="font-size:13px;font-weight:600">${s.name}</span>
-      <div><span style="color:#f59e0b;font-size:16px">${star(s.stars)}</span>${s.note ? `<div class="modal-note">"${s.note}"</div>` : ''}</div>
+      <div><span style="color:#f59e0b;font-size:16px">${star(s.stars)}</span>${s.note ? `<div class="modal-note">"${escHtml(s.note)}"</div>` : ''}</div>
     </div>`).join('')}
-    ${r.obs ? `<p style="margin-top:14px;font-size:14px;color:#374151"><strong>Obs:</strong> ${r.obs}</p>` : ''}
+    ${r.obs ? `<p style="margin-top:14px;font-size:14px;color:#374151"><strong>Obs:</strong> ${escHtml(r.obs)}</p>` : ''}
     <div class="modal-btns">
       <button class="btn btn-gray" onclick="closeModal()">Fechar</button>
       <button class="btn btn-danger" onclick="deleteEval(${r.id})">Excluir</button>
@@ -630,6 +835,167 @@ function deleteEval(id) {
   } catch(e) {}
   closeModal();
   renderHistory();
+}
+
+// ── ROTEIROS ──
+function renderScenarioTabs() {
+  document.getElementById('scenarioTabs').innerHTML = SCENARIOS.map(sc =>
+    `<div class="scenario-tab ${sc.id === currentScenario ? 'active' : ''}" onclick="selectScenario('${sc.id}')">${sc.label}</div>`
+  ).join('');
+}
+
+function selectScenario(id) {
+  currentScenario = id;
+  editingScriptId = null;
+  document.getElementById('scriptEditorPanel').hidden = true;
+  renderScenarioTabs();
+  renderScriptList();
+}
+
+function renderScriptList() {
+  const scripts = getScripts().filter(s => s.scenarioId === currentScenario);
+  const list = document.getElementById('scriptList');
+  if (!scripts.length) {
+    list.innerHTML = '<div class="empty-scripts">Nenhum roteiro para este cenário.<br>Clique em <strong>+ Novo Roteiro</strong> para criar.</div>';
+    return;
+  }
+  list.innerHTML = scripts.map(s =>
+    `<div class="script-item">
+      <div class="script-item-left">
+        <span class="script-badge ${s.status}">${s.status === 'aprovado' ? '✅ Aprovado' : '📝 Rascunho'}</span>
+        <span class="script-title">${escHtml(s.title)}</span>
+      </div>
+      <div class="script-item-actions">
+        <button class="btn btn-gray btn-sm" onclick="editScript('${escHtml(s.id)}')">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteScript('${escHtml(s.id)}')">🗑️</button>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function newScript() {
+  editingScriptId = null;
+  document.getElementById('editorHeading').textContent = 'Novo Roteiro';
+  document.getElementById('editorTitleInput').value = SCENARIO_NAMES[currentScenario] + ' — Novo';
+  document.getElementById('editorContent').value = '';
+  document.getElementById('scriptEditorPanel').hidden = false;
+  document.getElementById('scriptEditorPanel').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('editorTitleInput').focus();
+}
+
+function editScript(id) {
+  const s = getScripts().find(x => x.id === id);
+  if (!s) return;
+  editingScriptId = id;
+  document.getElementById('editorHeading').textContent = 'Editar Roteiro';
+  document.getElementById('editorTitleInput').value = s.title;
+  document.getElementById('editorContent').value = s.content;
+  document.getElementById('scriptEditorPanel').hidden = false;
+  document.getElementById('scriptEditorPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function saveScript(status) {
+  const title = document.getElementById('editorTitleInput').value.trim();
+  const content = document.getElementById('editorContent').value.trim();
+  if (!title) { alert('Informe um título para o roteiro.'); return; }
+  if (!content) { alert('O roteiro está vazio.'); return; }
+
+  const scripts = getScripts();
+  if (editingScriptId) {
+    const idx = scripts.findIndex(s => s.id === editingScriptId);
+    if (idx > -1) { scripts[idx].title = title; scripts[idx].content = content; scripts[idx].status = status; }
+  } else {
+    scripts.push({ id: 'script-' + Date.now(), scenarioId: currentScenario, title, content, status });
+  }
+  saveScripts(scripts);
+  cancelScriptEdit();
+  renderScriptList();
+}
+
+function deleteScript(id) {
+  if (!confirm('Excluir este roteiro?')) return;
+  saveScripts(getScripts().filter(s => s.id !== id));
+  if (editingScriptId === id) cancelScriptEdit();
+  renderScriptList();
+}
+
+function cancelScriptEdit() {
+  editingScriptId = null;
+  document.getElementById('scriptEditorPanel').hidden = true;
+}
+
+// ── SDRs ──
+function renderSDRList() {
+  const sdrs = getSDRs();
+  const list = document.getElementById('sdrList');
+  if (!sdrs.length) {
+    list.innerHTML = '<p style="color:#9ca3af;font-size:14px">Nenhum SDR cadastrado.</p>';
+    return;
+  }
+  list.innerHTML = sdrs.map(s =>
+    `<div class="sdr-card">
+      <div class="sdr-card-header">
+        <div class="sdr-name">${escHtml(s.name)}</div>
+        <div class="sdr-card-actions">
+          <button class="btn btn-gray btn-sm" onclick="editSDR('${escHtml(s.id)}')">✏️ Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteSDR('${escHtml(s.id)}')">🗑️</button>
+        </div>
+      </div>
+      <div class="sdr-weak-points">${s.weakPoints ? escHtml(s.weakPoints) : '<em style="color:#d1d5db">Sem perfil definido.</em>'}</div>
+    </div>`
+  ).join('');
+}
+
+function newSDR() {
+  editingSDRId = null;
+  document.getElementById('sdrFormTitle').textContent = 'Novo SDR';
+  document.getElementById('sdrNameInput').value = '';
+  document.getElementById('sdrWeakInput').value = '';
+  document.getElementById('sdrFormPanel').hidden = false;
+  document.getElementById('sdrNameInput').focus();
+}
+
+function editSDR(id) {
+  const sdr = getSDRs().find(s => s.id === id);
+  if (!sdr) return;
+  editingSDRId = id;
+  document.getElementById('sdrFormTitle').textContent = 'Editar SDR';
+  document.getElementById('sdrNameInput').value = sdr.name;
+  document.getElementById('sdrWeakInput').value = sdr.weakPoints || '';
+  document.getElementById('sdrFormPanel').hidden = false;
+  document.getElementById('sdrNameInput').focus();
+}
+
+function saveSDR() {
+  const name = document.getElementById('sdrNameInput').value.trim();
+  if (!name) { alert('Informe o nome do SDR.'); return; }
+  const weakPoints = document.getElementById('sdrWeakInput').value.trim();
+  const sdrs = getSDRs();
+  if (editingSDRId) {
+    const idx = sdrs.findIndex(s => s.id === editingSDRId);
+    if (idx > -1) { sdrs[idx].name = name; sdrs[idx].weakPoints = weakPoints; }
+  } else {
+    sdrs.push({ id: 'sdr-' + Date.now(), name, weakPoints });
+  }
+  saveSDRs(sdrs);
+  cancelSDREdit();
+  renderSDRList();
+  populateSDRSelector();
+}
+
+function deleteSDR(id) {
+  const sdrs = getSDRs();
+  if (sdrs.length <= 1) { alert('É necessário ter pelo menos um SDR cadastrado.'); return; }
+  if (!confirm('Excluir este SDR?')) return;
+  saveSDRs(sdrs.filter(s => s.id !== id));
+  if (editingSDRId === id) cancelSDREdit();
+  renderSDRList();
+  populateSDRSelector();
+}
+
+function cancelSDREdit() {
+  editingSDRId = null;
+  document.getElementById('sdrFormPanel').hidden = true;
 }
 
 init();
