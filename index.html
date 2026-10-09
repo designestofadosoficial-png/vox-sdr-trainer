@@ -1,4 +1,4 @@
-TEST_PASTE_WORKS<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -140,7 +140,15 @@ TEST_PASTE_WORKS<!DOCTYPE html>
   .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
   .modal-stage { padding: 10px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
   .modal-note { font-size: 13px; color: #6b7280; font-style: italic; }
-  .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .hist-transcript { margin-top: 14px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+  .hist-transcript summary { cursor: pointer; font-weight: 700; }
+  .hist-transcript div { margin-top: 8px; white-space: pre-wrap; line-height: 1.55; color: #374151; max-height: 240px; overflow-y: auto; }
+  .edit-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .edit-row b { font-size: 12px; min-width: 110px; }
+  .edit-row select, .edit-row input { font-size: 13px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 8px; background: #f9fafb; font-family: inherit; }
+  .edit-row input[type=text] { flex: 1; min-width: 0; }
+  .badge.draft { background: #ede9fe; color: #6d28d9; }
 
   /* ── ROTEIRO ── */
   .scenario-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -154,6 +162,19 @@ TEST_PASTE_WORKS<!DOCTYPE html>
   .script-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
   .script-badge.aprovado { background: #dcfce7; color: #15803d; }
   .script-badge.rascunho { background: #f3f4f6; color: #6b7280; }
+  .script-badge.legado { background: #fef3c7; color: #92400e; }
+  .script-item.legado { opacity: .7; }
+  .pr-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; }
+  .pr-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .pr-sub { font-size: 13px; color: #6b7280; margin-bottom: 14px; line-height: 1.5; }
+  .pr-rule { display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid #f3f4f6; font-size: 14px; line-height: 1.5; }
+  .pr-rule:first-of-type { border-top: none; }
+  .pr-rule b { color: #7c3aed; min-width: 22px; }
+  .pr-check { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 14px; cursor: pointer; line-height: 1.5; }
+  .pr-check input { margin-top: 4px; width: 16px; height: 16px; accent-color: #7c3aed; }
+  .pr-ex { border: 1px solid #ede9fe; border-radius: 10px; margin-bottom: 8px; background: #faf9ff; }
+  .pr-ex summary { padding: 12px 14px; cursor: pointer; font-weight: 700; font-size: 14px; }
+  .pr-ex div { padding: 0 14px 14px; font-size: 14px; line-height: 1.65; color: #374151; white-space: pre-line; }
   .script-title { font-size: 14px; font-weight: 600; color: #1a1a2e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .script-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
@@ -202,7 +223,7 @@ TEST_PASTE_WORKS<!DOCTYPE html>
 <div class="header">
   <div>
     <h1>🎙️ SDR Trainer — Vox2You</h1>
-    <p>Simulação · Roteiros · Avaliação · Histórico</p>
+    <p>Simulação · Roteiros · Prática · Avaliação · Histórico</p>
   </div>
 </div>
 
@@ -211,6 +232,7 @@ TEST_PASTE_WORKS<!DOCTYPE html>
   <div class="tab" onclick="switchTab('eval')">📋 Avaliar</div>
   <div class="tab" onclick="switchTab('hist')">📊 Histórico</div>
   <div class="tab" onclick="switchTab('roteiro')">📖 Roteiros</div>
+  <div class="tab" onclick="switchTab('pratica')">🏋️ Prática</div>
   <div class="tab" onclick="switchTab('sdrs')">👥 SDRs</div>
 </div>
 
@@ -263,14 +285,18 @@ TEST_PASTE_WORKS<!DOCTYPE html>
   <!-- IA: avaliação de ligação real -->
   <div class="ai-eval-section">
     <h3>🤖 Avaliação de Ligação Real por IA</h3>
-    <p class="ai-eval-desc">Cole a transcrição da sua ligação. O coach vai analisar as 7 etapas e dar um feedback detalhado e honesto.</p>
+    <p class="ai-eval-desc">Cole a transcrição da sua ligação. O coach vai analisar as 7 etapas, conferir o checklist da abertura (Estudo da Abertura) e dar um feedback detalhado e honesto.</p>
     <div class="ai-eval-controls">
       <label>SDR:</label>
       <select id="aiEvalSdrSelect"></select>
+      <label>Prospect:</label>
+      <input type="text" id="aiEvalProspect" placeholder="Nome do prospect (opcional)" style="font-size:13px;border:1px solid #e5e7eb;border-radius:8px;padding:6px 10px;background:#f9fafb">
     </div>
+    <div id="aiEvalEditBanner" class="ai-overall" style="margin:0 0 10px" hidden></div>
     <textarea id="transcriptInput" placeholder="Cole aqui a transcrição da ligação...&#10;&#10;Pode ser do Fireflies, Otter, ou qualquer app de transcrição. Funciona também com anotações manuais do que foi dito."></textarea>
     <div class="ai-eval-btn-row">
       <button class="btn btn-primary" onclick="evaluateTranscript()" id="btnEvalTranscript">🔍 Avaliar com IA</button>
+      <button class="btn btn-dark" onclick="saveTranscriptDraft()">💾 Salvar rascunho</button>
       <button class="btn btn-gray" onclick="clearTranscript()">Limpar</button>
     </div>
     <div id="aiEvalResult" class="ai-eval-result" hidden></div>
@@ -330,6 +356,11 @@ TEST_PASTE_WORKS<!DOCTYPE html>
   <button class="btn btn-primary" onclick="newScript()" style="margin-top:4px">+ Novo Roteiro</button>
 </div>
 
+<!-- ═══ PRÁTICA ═══ -->
+<div id="tab-pratica" class="content" hidden>
+  <div id="praticaContainer"></div>
+</div>
+
 <!-- ═══ SDRs ═══ -->
 <div id="tab-sdrs" class="content" hidden>
   <div class="sdrs-layout">
@@ -343,7 +374,7 @@ TEST_PASTE_WORKS<!DOCTYPE html>
         <h3 id="sdrFormTitle">Novo SDR</h3>
         <div class="field">
           <label>Nome</label>
-          <input type="text" id="sdrNameInput" placeholder="Ex: Marina">
+          <input type="text" id="sdrNameInput" placeholder="Ex: Anielle">
         </div>
         <div class="field">
           <label>Perfil / Pontos fracos</label>
@@ -367,8 +398,8 @@ TEST_PASTE_WORKS<!DOCTYPE html>
 const API_URL = '/api/chat';
 
 const STAGES = [
-  { id:'abertura',     name:'1. Abertura',       desc:'Apresentação + permissão',         kw:['ainda não me conhece','pode falar','bom dia','boa tarde','meu nome','tá feliz','não me conhece','alô'] },
-  { id:'rapport',      name:'2. Rapport',         desc:'Indicador ou conexão emocional',   kw:['indicou','pediu para','me lembra','pesquisa','3 minutos','objetivo não é esse','não acordou'] },
+  { id:'abertura',     name:'1. Abertura',       desc:'Nome, indicação e curiosidade',    kw:['ainda não me conhece','não me conhece','ia ligar','te falou','passou seu','passou o seu','tá feliz','está feliz','algo muito bacana','posso te contar','lembrou de você','lembrou de voce'] },
+  { id:'rapport',      name:'2. Rapport',         desc:'Motivo: entender a pessoa',        kw:['indicou','pediu para','comentou comigo','esteve aqui comigo','me contou','conversamos sobre','me lembra'] },
   { id:'qualificacao', name:'3. Qualificação',    desc:'Profissão e contexto',             kw:['trabalha com','faz o que','profiss','área','o que você faz','me conta','sua atividade'] },
   { id:'spin',         name:'4. Dor & SPIN',      desc:'Ansiedade, resultados, nota 1-10', kw:['ansioso','apresentação','resultado','comunicação','expres','influên','1 a 10','poderia ter','reunião','negociação'] },
   { id:'pitch',        name:'5. Apresentação',    desc:'Vox, 90 mil alunos, método',       kw:['90 mil','maior rede','oratória','brasil','lemann','magalu','método','presencial','prático','vox2you'] },
@@ -385,20 +416,34 @@ const SCENARIOS = [
 
 const SCENARIO_NAMES = { referido:'Referido', frio:'Prospecção Fria', resistente:'Resistente', ocupado:'Ocupado' };
 
-const DEFAULT_SDR = {
-  id: 'sdr-marina',
-  name: 'Marina',
-  weakPoints: 'Baixo senso de urgência — tende a deixar a ligação em aberto. Evita fechamentos diretos. Perfil DISC: Estável-Influente (S=34%, I=27%, C=25%, D=14%). Ponto forte: empatia e escuta ativa.'
-};
+const DEFAULT_SDRS = [
+  {
+    id: 'sdr-anielle',
+    name: 'Anielle',
+    weakPoints: 'Dado da operação: ótima taxa de atendimento, mas agendamento muito baixo. Hipótese a confirmar com ligação gravada: perde a pessoa nos primeiros segundos (curiosidade) e/ou não transforma a atenção em compromisso. Foco de treino: abertura por indicação, pausa de espera depois de "o fulano te falou que eu ia ligar?", tom descendente nas afirmações, não pedir tempo, pergunta sobre o problema da pessoa.'
+  },
+  {
+    id: 'sdr-thiago',
+    name: 'Thiago',
+    weakPoints: 'Líder comercial. Referência das aberturas do time (modelos A e B do Estudo da Abertura).'
+  }
+];
+const DEFAULT_SDR = DEFAULT_SDRS[0];
+const SCRIPTS_VERSION = 2;
+const SDRS_VERSION = 2;
 
 const DEFAULT_SCRIPTS = [
   {
-    id: 'ref-v1', scenarioId: 'referido', title: 'Referido — Padrão', status: 'aprovado',
-    content: `ABERTURA
-"Alô [Nome], bom dia! Meu nome é [SDR], da Vox2You. Você pode falar um minutinho? Quem pediu pra eu ligar foi o [Indicador] — lembra quem é?"
+    id: 'ref-v1', scenarioId: 'referido', title: 'Referido — Padrão', status: 'rascunho',
+    content: `ABERTURA (indicação)
+"[Nome]! Tudo bem com você?" (entusiasmo, sorrindo)
+"Você não me conhece ainda... o [Indicador] te falou que eu ia ligar?" (pausa — aguarde a resposta)
+"Pois é, ele esteve aqui comigo e acabou lembrando de você para algo muito bacana. Posso te contar?"
+💡 Não peça tempo, não diga de onde é a ligação e não fale do produto. Se perguntarem de onde você é, responda com naturalidade (Vox2You) e volte a conversa para a pessoa.
 
-RAPPORT
-"O [Indicador] esteve comigo conhecendo nosso treinamento e achou fantástico. Ele te indicou porque acha que você também tem interesse em desenvolver sua comunicação. Você faz o quê hoje?"
+RAPPORT / MOTIVO DA LIGAÇÃO
+"O [Indicador] comentou comigo que [fato real que ele disse sobre a pessoa]. Fiquei curioso(a) pra entender melhor — como é isso no seu dia a dia hoje?"
+💡 O motivo da ligação é entender o problema dela. Faça o estudo do lead antes de discar. Ainda sem falar de curso, workshop ou consultoria.
 
 QUALIFICAÇÃO
 "Que legal! Me fala como é seu trabalho... Você tem apresentações com frequência? Já teve a sensação de que podia ter se expressado melhor numa reunião importante?"
@@ -420,8 +465,10 @@ ASSENTAMENTO
   },
   {
     id: 'ref-v2', scenarioId: 'referido', title: 'Referido — Versão Direta', status: 'rascunho',
-    content: `ABERTURA DIRETA
-"Oi [Nome]! Sou [SDR] da Vox2You. Tô ligando porque o [Indicador] me pediu especificamente pra falar com você. São 3 minutinhos — pode?"
+    content: `ABERTURA DIRETA (principium com indicação)
+"[Nome], bom dia! Aqui é [SDR]. O [Indicador] lembrou de você quando falávamos sobre [tema real que a pessoa domina]."
+"Ele chegou a comentar que você teria muito a dizer sobre isso. Posso te contar o que conversamos?"
+💡 Só use com um tema verdadeiro, vindo da conversa com o indicador. Sem empresa, sem produto, sem pedir tempo.
 
 QUALIFICAÇÃO RÁPIDA
 "Você trabalha com vendas ou apresentações? [...] E como você avalia sua comunicação de 1 a 10?"
@@ -437,13 +484,40 @@ ASSENTAMENTO
 💡 Use para prospects que sinalizaram pouco tempo disponível.`
   },
   {
-    id: 'frio-v1', scenarioId: 'frio', title: 'Frio — Anti-Venda (Padrão)', status: 'aprovado',
-    content: `ABERTURA DESARMANTE
-"Oi [Nome]! Tá feliz hoje?" [...] "Que bom! Você ainda não me conhece — sou [SDR], da Vox2You: fale, comunique, transforme."
+    id: 'ref-open-b', scenarioId: 'referido', title: 'Abertura — Quebra de Expectativa (Modelo B do time)', status: 'rascunho',
+    content: `ABERTURA (esboço do script do Thiago)
+"[Nome]... e aí, está feliz?" (pausa curta)
+"Que pergunta estranha, não é mesmo?"
+"Eu sou [SDR], estou ligando porque o [Indicador] me passou o seu número. Conhece?" (pausa — aguarde)
+"Que bom! Ele lembrou de você quando estávamos falando sobre [assunto real]... e disse que poderia ser um assunto que você gosta muito de debater..." (frase deixada no ar)
 
-DESARMAMENTO
-"Eu sei que você não acordou hoje pensando 'quero um curso de oratória' — então meu objetivo não é esse agora. Estou fazendo uma pesquisinha rápida. São 3 minutinhos. Pode me ajudar?"
-💡 Anti-venda proposital — desativa a defesa. Tom genuíno e leve.
+💡 Por que funciona: o estranhamento captura a atenção; "que pergunta estranha" antecipa a objeção; a frase deixada no ar (aposiopese) faz a pessoa perguntar "que assunto?".
+⚠️ O assunto citado precisa ser o que foi realmente conversado com quem indicou. Teste em quais perfis a pergunta "está feliz?" funciona melhor.
+
+Depois da abertura, siga as etapas do roteiro "Referido — Padrão" (rapport em diante).`
+  },
+  {
+    id: 'ref-open-6', scenarioId: 'referido', title: 'Abertura — Comparação Implícita (Modelo 6)', status: 'rascunho',
+    content: `ABERTURA (maiêutica)
+"[Nome], tudo bem? Quero te fazer uma pergunta antes de qualquer coisa: quando você olha para as pessoas da sua área que estão crescendo mais rápido, o que você acha que elas fazem diferente na hora de se comunicar?"
+(ouça a resposta)
+"Era justamente sobre isso que o [Indicador] comentava comigo. Se fizer sentido, eu te conto o que ele disse."
+
+💡 Perguntar antes de se apresentar muda a pessoa de receptora de pitch para participante da conversa. Sem empresa, sem produto, sem pedir tempo.
+
+Depois da abertura, siga as etapas do roteiro "Referido — Padrão" (rapport em diante).`
+  },
+  {
+    id: 'frio-v1', scenarioId: 'frio', title: 'Frio — Anti-Venda (Padrão)', status: 'rascunho',
+    content: `ABERTURA (quebra de expectativa)
+"[Nome]... e aí, está feliz?" (pausa curta)
+"Que pergunta estranha, não é mesmo? Você ainda não me conhece — eu sou [SDR]."
+💡 Quebra o piloto automático de quem espera um vendedor. Tom leve e genuíno. Não diga de onde é, não peça tempo.
+
+MOTIVO (fato sobre a pessoa)
+"Eu sei que você não esperava essa ligação, então vou ser direto(a): estive conhecendo um pouco da sua trajetória, [fato real e público: cargo, projeto, fala], e uma coisa me chamou atenção: [observação genuína]."
+"Isso é algo que você vive no dia a dia ou eu estou enxergando errado?" (pausa — aguarde)
+💡 Exige estudo do lead. Sem fato real, não use. Nada de pretexto: o motivo da ligação é entender o problema dela.
 
 QUALIFICAÇÃO
 "Você trabalha com vendas, apresentações, liderança? Me conta mais sobre o que você faz."
@@ -463,10 +537,9 @@ ASSENTAMENTO
   {
     id: 'frio-v2', scenarioId: 'frio', title: 'Frio — Com Urgência', status: 'rascunho',
     content: `ABERTURA COM ENERGIA
-"[Nome], oi! Sou [SDR] da Vox2You. Você tem 3 minutinhos agora?"
-
-CONTEXTO + URGÊNCIA
-"Ótimo! Estou ligando porque temos uma turma nova abrindo essa semana e quero que você conheça antes de fechar as vagas."
+"[Nome]! Tudo bem com você? Eu sou [SDR] — a gente ainda não se conhece." (pausa curta, sorrindo)
+"Uma pergunta antes de qualquer coisa: [pergunta de problema baseada no estudo do lead — ex.: quando você precisa se posicionar numa reunião importante, a ideia sai tão boa quanto na sua cabeça?]" (pausa — aguarde)
+💡 Sem pedir tempo, sem empresa, sem produto. A urgência só entra mais à frente, no PITCH.
 
 QUALIFICAÇÃO EXPRESSA
 "Você trabalha com o quê? [...] E comunicação é importante na sua área?"
@@ -475,7 +548,8 @@ SPIN
 "Se você pudesse se comunicar com mais confiança e clareza, o que mudaria nos seus resultados?"
 
 PITCH + URGÊNCIA
-"A Vox2You tem 90 mil alunos — maior rede de oratória do Brasil. As vagas são limitadas. Tenho uma consultoria grátis ainda essa semana."
+"Temos uma turma nova abrindo essa semana. A Vox2You tem 90 mil alunos — maior rede de oratória do Brasil. As vagas são limitadas. Tenho uma consultoria grátis ainda essa semana."
+⚠️ Confirme se a turma nova e as vagas limitadas são reais antes de usar.
 
 FECHAMENTO
 "Tenho quinta às 14h ou sexta às 10h — qual encaixa melhor? As vagas estão preenchendo rápido."
@@ -484,15 +558,46 @@ ASSENTAMENTO
 "[Dia] às [hora] está travado! Te mando a confirmação agora."`
   },
   {
+    id: 'frio-open-1', scenarioId: 'frio', title: 'Abertura — Hipótese sobre a Pessoa (Modelo 1)', status: 'rascunho',
+    content: `ABERTURA (requer estudo do lead)
+"[Nome], tudo bem? Posso estar enganado(a), mas pelo que o [Indicador] me contou, você é daquelas pessoas que sabe muito do que faz, mas sente que na hora de se posicionar a conversa não rende o que poderia."
+"É isso mesmo ou eu entendi errado?" (pausa — aguarde)
+
+💡 A hipótese é sobre a pessoa e é oferecida para correção. A pergunta é de problema, não de produto.
+
+Depois da abertura, siga as etapas do roteiro "Frio — Anti-Venda" (qualificação em diante).`
+  },
+  {
+    id: 'frio-open-2', scenarioId: 'frio', title: 'Abertura — Pergunta Retórica (Modelo 2)', status: 'rascunho',
+    content: `ABERTURA
+"[Nome], tudo bem? O [Indicador] me passou seu contato. Antes de qualquer coisa, uma pergunta: você já reparou como algumas pessoas falam do que fazem com naturalidade, e outras travam justamente quando mais importa?" (pausa)
+"Em qual desses lados você se vê?"
+
+💡 A pergunta retórica ativa reconhecimento antes de qualquer explicação; a segunda pergunta transforma o recurso em diálogo.
+
+Depois da abertura, siga as etapas do roteiro "Frio — Anti-Venda" (qualificação em diante).`
+  },
+  {
+    id: 'frio-open-10', scenarioId: 'frio', title: 'Abertura — Problema na Liderança (Modelo 10)', status: 'rascunho',
+    content: `ABERTURA (requer estudo do lead)
+"[Nome], tudo bem? O [Indicador] comentou que você está ampliando o seu time. Uma coisa que eu ouço muito de quem está nessa fase é que o tempo até a pessoa render de verdade acaba sendo maior do que se imaginava."
+"Isso acontece com você ou a sua experiência tem sido diferente?" (pausa — aguarde)
+
+⚠️ Só use se a informação sobre a ampliação do time for verdadeira.
+
+Depois da abertura, siga as etapas do roteiro "Frio — Anti-Venda" (qualificação em diante).`
+  },
+  {
     id: 'res-v1', scenarioId: 'resistente', title: 'Resistente — Padrão', status: 'rascunho',
-    content: `ABERTURA (COM RESISTÊNCIA)
-"[Nome], sei que você está ocupado(a) — são literalmente 2 minutos. Prometo que vale."
+    content: `ABERTURA (HONESTIDADE)
+"[Nome], [SDR] falando. Eu sei que você provavelmente recebe muitas ligações por semana, então vou ser direto(a): a gente não se conhece, mas o [Indicador] pediu que eu falasse com você."
+"Ele te avisou?" (pausa — aguarde)
 
 SE DISSER "não tenho interesse":
-"Entendo! Antes de desligar — o que seria o cenário ideal pra você querer conhecer o que a Vox2You faz? Só curiosidade."
+"Entendo, [Nome] — eu nem cheguei a te contar o que é, então faz sentido. O [Indicador] lembrou de você por [tema real]. Posso só te fazer uma pergunta sobre isso?"
 
 REFRAME
-"Na verdade não é sobre cursos — é sobre resultados. A Vox2You treina comunicação pra quem já é bom e quer ser excelente."
+"Na verdade eu ainda nem falei do que se trata — antes quero entender como é a sua comunicação hoje, sem pitch."
 
 QUALIFICAÇÃO REVERSA
 "Você está satisfeito 100% com a forma como se comunica hoje? [...] Então existe espaço pra crescer."
@@ -507,9 +612,28 @@ ASSENTAMENTO FIRME
 "Perfeito. [Dia] às [hora]. Anota aí — eu já travei aqui."`
   },
   {
+    id: 'res-open-7', scenarioId: 'resistente', title: 'Abertura — Retorno, 2ª tentativa (Modelo 7)', status: 'rascunho',
+    content: `ABERTURA DE RETORNO
+"[Nome], bom dia! Aqui é [SDR], a gente tentou falar semana passada. Não vou refazer a mesma abordagem."
+"Aconteceu uma coisa essa semana, com alguém que estava no mesmo ponto que você, que eu acho que vai te interessar. Posso te contar?"
+
+💡 "Não vou refazer a mesma abordagem" sinaliza respeito. Sem empresa, sem produto, sem pedir tempo.
+⚠️ A novidade citada precisa ser real.
+
+Depois da abertura, siga as etapas do roteiro "Resistente — Padrão" (a partir do reframe).`
+  },
+  {
     id: 'ocu-v1', scenarioId: 'ocupado', title: 'Ocupado — Ultra-Rápido', status: 'rascunho',
     content: `ABERTURA ULTRA-RÁPIDA
-"[Nome], 2 minutinhos?" [...] "Ótimo! Sou [SDR] da Vox2You — sei que você é ocupado(a), então vou direto."
+"[Nome]! Tudo bem? Você não me conhece ainda... o [Indicador] te falou que eu ia ligar?" (pausa — aguarde)
+
+SE DISSER QUE ESTÁ OCUPADO(A)
+"Imagina, [Nome], sem problema nenhum! É uma coisa que o [Indicador] achou que ia te interessar, mas merece uma conversa com calma. Qual o melhor horário pra eu te ligar hoje?"
+⚠️ NÃO adiante o assunto. Se você não consegue explicar em poucos segundos, a pessoa entende que é venda e desliga. Mantenha a curiosidade e combine o retorno.
+💡 Se insistir em saber o assunto: "Prefiro te contar sem pressa, assim você decide se faz sentido pra você."
+
+SE DISSER QUE PODE FALAR
+"Que bom! O [Indicador] lembrou de você para algo muito bacana — vou direto: [pergunta de problema baseada no estudo do lead]."
 
 QUALIFICAÇÃO EM 1 PERGUNTA
 "Você trabalha com apresentações ou vendas no dia a dia?"
@@ -523,7 +647,26 @@ MARCAÇÃO ULTRA-DIRETA
 ASSENTAMENTO RÁPIDO
 "Excelente! [Dia] às [hora]. Te mando a confirmação agora. Obrigado(a) pela atenção!"`
   },
+  {
+    id: 'ocu-open-8', scenarioId: 'ocupado', title: 'Abertura — Para Gatekeeper (Modelo 8)', status: 'rascunho',
+    content: `ABERTURA PARA SECRETÁRIA / RECEPÇÃO
+"Bom dia! [SDR] falando. O [Indicador] me passou o contato do [Nome do decisor]. Ele está?" (tom descendente)
+Se perguntarem o assunto: "É uma conversa que o [Indicador] comentou com ele."
+
+💡 Simplicidade e confiança. Sem explicação longa, sem tom de pedido. A indicação dá legitimidade e a resposta curta preserva a curiosidade.`
+  },
+  {
+    id: 'ocu-open-9', scenarioId: 'ocupado', title: 'Abertura — Pessoa de Alta Posição (Modelo 9)', status: 'rascunho',
+    content: `ABERTURA ULTRA-DIRETA
+"[Nome], [SDR] aqui. O [Indicador] me pediu para falar diretamente com você. Ele te avisou?" (pausa — aguarde)
+"Ele disse que você é a pessoa certa para uma conversa sobre [tema real]. Posso te contar?"
+
+💡 Pessoas em posição sênior valorizam diretividade. Curto, apoiado em indicação e terminando em pergunta que convida resposta.
+
+Depois da abertura, siga as etapas do roteiro "Ocupado — Ultra-Rápido".`
+  },
 ];
+
 
 // ── Estado ──
 let sessionActive = false;
@@ -542,7 +685,7 @@ function saveSDRs(sdrs) {
   try { localStorage.setItem('vox_sdrs', JSON.stringify(sdrs)); } catch {}
 }
 function getSDRs() {
-  return loadSDRs() || [Object.assign({}, DEFAULT_SDR)];
+  return loadSDRs() || DEFAULT_SDRS.map(s => Object.assign({}, s));
 }
 
 function loadScripts() {
@@ -567,9 +710,43 @@ function escHtml(s) {
 }
 
 // ── Init ──
+// Migração de roteiros: guarda a versão antiga como "[Antigo]" (nada é apagado)
+function migrateScripts() {
+  let ver = 0;
+  try { ver = parseInt(localStorage.getItem('vox_scripts_version') || '0', 10); } catch {}
+  const fresh = JSON.parse(JSON.stringify(DEFAULT_SCRIPTS));
+  const stored = loadScripts();
+  if (!stored) {
+    saveScripts(fresh);
+  } else if (ver < SCRIPTS_VERSION) {
+    const defaultIds = new Set(DEFAULT_SCRIPTS.map(s => s.id));
+    const kept = stored.map(s => defaultIds.has(s.id)
+      ? Object.assign({}, s, { id: s.id + '-legado', title: '[Antigo] ' + String(s.title).replace(/^\[Antigo\] /, ''), status: 'legado' })
+      : s);
+    saveScripts(fresh.concat(kept));
+  }
+  try { localStorage.setItem('vox_scripts_version', String(SCRIPTS_VERSION)); } catch {}
+}
+
+// Migração de SDRs: adiciona Anielle e Thiago se ainda não existirem (não remove ninguém)
+function migrateSDRs() {
+  let ver = 0;
+  try { ver = parseInt(localStorage.getItem('vox_sdrs_version') || '0', 10); } catch {}
+  const stored = loadSDRs();
+  if (!stored) {
+    saveSDRs(DEFAULT_SDRS.map(s => Object.assign({}, s)));
+  } else if (ver < SDRS_VERSION) {
+    DEFAULT_SDRS.forEach(d => {
+      if (!stored.some(s => String(s.name).trim().toLowerCase() === d.name.toLowerCase())) stored.push(Object.assign({}, d));
+    });
+    saveSDRs(stored);
+  }
+  try { localStorage.setItem('vox_sdrs_version', String(SDRS_VERSION)); } catch {}
+}
+
 function init() {
-  if (!loadSDRs()) saveSDRs([Object.assign({}, DEFAULT_SDR)]);
-  if (!loadScripts()) saveScripts(JSON.parse(JSON.stringify(DEFAULT_SCRIPTS)));
+  migrateSDRs();
+  migrateScripts();
   renderStageList();
   renderStageEvalList();
   populateSDRSelector();
@@ -586,6 +763,12 @@ function populateAiEvalSdrSelector() {
   sel.innerHTML = getSDRs().map(s => `<option value="${escHtml(s.id)}">${escHtml(s.name)}</option>`).join('');
   if (prev) sel.value = prev;
 }
+
+let lastAiEval = null;      // { ev, sdrName, transcript, recordId }
+let editingEvalId = null;   // registro do histórico em edição
+
+function getEvals() { try { return JSON.parse(localStorage.getItem('vox_evals') || '[]'); } catch { return []; } }
+function setEvals(arr) { try { localStorage.setItem('vox_evals', JSON.stringify(arr)); } catch {} }
 
 async function evaluateTranscript() {
   const transcript = document.getElementById('transcriptInput').value.trim();
@@ -617,6 +800,7 @@ async function evaluateTranscript() {
     const data = await res.json();
 
     if (data.evaluation) {
+      lastAiEval = { ev: data.evaluation, sdrName: sdr.name, transcript, recordId: editingEvalId };
       renderAiEvalResult(data.evaluation, sdr);
     } else if (data.content) {
       resultDiv.innerHTML = `<div class="ai-overall"><div class="ai-overall-label">📊 ANÁLISE DO COACH</div>${escHtml(data.content).replace(/\n/g,'<br>')}</div>`;
@@ -650,6 +834,18 @@ function renderAiEvalResult(ev, sdr) {
     ? ((ev.stages || []).reduce((a,s) => a + s.score, 0) / (ev.stages || []).length).toFixed(1)
     : '—';
 
+  const oc = ev.opening_check;
+  const ocRow = (label, ok) => `<div style="font-size:13px;padding:3px 0">${ok === null || ok === undefined ? '➖' : ok ? '✅' : '❌'} ${escHtml(label)}</div>`;
+  const openingHtml = oc ? `
+    <div class="ai-overall" style="margin-top:10px">
+      <div class="ai-overall-label">🎯 CHECKLIST DA ABERTURA</div>
+      ${ocRow('Não pediu tempo no início', oc.pediu_tempo_no_inicio === undefined ? null : oc.pediu_tempo_no_inicio === false)}
+      ${ocRow('Não disse a empresa no início', oc.disse_empresa_no_inicio === undefined ? null : oc.disse_empresa_no_inicio === false)}
+      ${ocRow('Não falou de produto no início', oc.falou_produto_no_inicio === undefined ? null : oc.falou_produto_no_inicio === false)}
+      ${ocRow('Esperou a resposta depois da pergunta de indicação', oc.esperou_resposta_apos_indicacao)}
+      ${ocRow('Gerou curiosidade antes de explicar qualquer coisa', oc.gerou_curiosidade)}
+    </div>` : '';
+
   resultDiv.innerHTML = `
     <div class="ai-eval-result-header">
       <span class="ai-eval-result-title">📊 Resultado da Análise — ${escHtml(sdr.name)}</span>
@@ -657,44 +853,89 @@ function renderAiEvalResult(ev, sdr) {
       <span class="badge gray">Média ${avgScore}/3</span>
     </div>
     ${stagesHtml}
+    ${openingHtml}
     <div class="ai-overall">
       <div class="ai-overall-label">💬 FEEDBACK DO COACH</div>
       ${escHtml(ev.overall || '').replace(/\n/g,'<br>')}
     </div>
     <div class="ai-save-row">
       <label>Salvar no histórico como:</label>
-      <input type="text" id="aiEvalSaveName" placeholder="Nome do prospect (opcional)">
-      <button class="btn btn-success btn-sm" onclick="saveAiEvalToHistory(${JSON.stringify(JSON.stringify({ev, sdrName: sdr.name}))})">💾 Salvar</button>
+      <input type="text" id="aiEvalSaveName" placeholder="Nome do prospect (opcional)" value="${escHtml(document.getElementById('aiEvalProspect')?.value || '')}">
+      <button class="btn btn-success btn-sm" onclick="saveAiEvalToHistory()">${editingEvalId ? '💾 Atualizar no histórico' : '💾 Salvar'}</button>
     </div>`;
 }
 
-function saveAiEvalToHistory(jsonStr) {
-  try {
-    const { ev, sdrName } = JSON.parse(jsonStr);
-    const name = document.getElementById('aiEvalSaveName')?.value.trim() || 'Ligação avaliada por IA';
-    const stages = (ev.stages || []).map(s => ({ id: s.id, name: s.name, stars: s.score, note: s.comment || '' }));
-    const rated = stages.filter(s => s.stars > 0);
-    const avg = rated.length ? (rated.reduce((a,s) => a + s.stars, 0) / rated.length).toFixed(1) : '0.0';
-    const record = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString('pt-BR'),
-      name,
-      prof: sdrName || '',
-      type: 'Ligação Real (IA)',
-      result: ev.result || '—',
-      obs: ev.overall || '',
-      stages,
-      avg
-    };
-    const saved = JSON.parse(localStorage.getItem('vox_evals') || '[]');
-    saved.unshift(record);
-    localStorage.setItem('vox_evals', JSON.stringify(saved));
-    alert('✅ Salvo no histórico!');
-  } catch(e) { alert('Erro ao salvar.'); }
+function saveAiEvalToHistory() {
+  if (!lastAiEval) { alert('Avalie a ligação antes de salvar.'); return; }
+  const { ev, sdrName, transcript, recordId } = lastAiEval;
+  const typed = document.getElementById('aiEvalSaveName')?.value.trim() || document.getElementById('aiEvalProspect')?.value.trim();
+  const stages = (ev.stages || []).map(s => ({ id: s.id, name: s.name, stars: s.score, note: s.comment || '' }));
+  const rated = stages.filter(s => s.stars > 0);
+  const avg = rated.length ? (rated.reduce((a, s) => a + s.stars, 0) / rated.length).toFixed(1) : '0.0';
+  const fields = {
+    name: typed || 'Ligação avaliada por IA', prof: sdrName || '', type: 'Ligação Real (IA)',
+    result: ev.result || '—', obs: ev.overall || '', stages, avg, transcript: transcript || '',
+    opening_check: ev.opening_check || null, status: 'avaliada'
+  };
+  const evals = getEvals();
+  const idx = recordId ? evals.findIndex(r => r.id === recordId) : -1;
+  if (idx > -1) evals[idx] = Object.assign({}, evals[idx], fields);
+  else evals.unshift(Object.assign({ id: Date.now(), date: new Date().toLocaleDateString('pt-BR') }, fields));
+  setEvals(evals);
+  lastAiEval = null;
+  clearTranscript();
+  switchTab('hist');
+}
+
+function saveTranscriptDraft() {
+  const transcript = document.getElementById('transcriptInput').value.trim();
+  if (!transcript) { alert('Cole a transcrição antes de salvar o rascunho.'); return; }
+  const sel = document.getElementById('aiEvalSdrSelect');
+  const sdr = getSDRs().find(s => s.id === (sel ? sel.value : null)) || getSDRs()[0] || DEFAULT_SDR;
+  const name = document.getElementById('aiEvalProspect').value.trim();
+  const evals = getEvals();
+  const idx = editingEvalId ? evals.findIndex(r => r.id === editingEvalId) : -1;
+  if (idx > -1) {
+    evals[idx].transcript = transcript;
+    if (name) evals[idx].name = name;
+    evals[idx].prof = sdr.name;
+  } else {
+    evals.unshift({
+      id: Date.now(), date: new Date().toLocaleDateString('pt-BR'),
+      name: name || 'Rascunho — ' + new Date().toLocaleDateString('pt-BR'),
+      prof: sdr.name, type: 'Ligação Real (IA)', result: '📝 Rascunho', obs: '',
+      stages: [], avg: '0.0', transcript, status: 'rascunho'
+    });
+  }
+  setEvals(evals);
+  clearTranscript();
+  switchTab('hist');
+}
+
+// Abre um registro do histórico na aba Avaliar para (re)avaliar com IA; ao salvar, o mesmo registro é atualizado
+function openEvalInEditor(id) {
+  const r = getEvals().find(x => x.id === id);
+  if (!r) return;
+  closeModal();
+  switchTab('eval');
+  editingEvalId = id;
+  lastAiEval = null;
+  document.getElementById('transcriptInput').value = r.transcript || '';
+  document.getElementById('aiEvalProspect').value = r.name || '';
+  const sel = document.getElementById('aiEvalSdrSelect');
+  const sdr = getSDRs().find(s => s.name === r.prof);
+  if (sel && sdr) sel.value = sdr.id;
+  const b = document.getElementById('aiEvalEditBanner');
+  b.hidden = false;
+  b.innerHTML = '✏️ Editando o registro <strong>' + escHtml(r.name) + '</strong>. Ajuste a transcrição se quiser e clique em Avaliar com IA ou Salvar rascunho: o histórico será atualizado, sem criar um novo registro.';
+  document.getElementById('transcriptInput').focus();
 }
 
 function clearTranscript() {
   document.getElementById('transcriptInput').value = '';
+  const pn = document.getElementById('aiEvalProspect'); if (pn) pn.value = '';
+  const bn = document.getElementById('aiEvalEditBanner'); if (bn) { bn.hidden = true; bn.innerHTML = ''; }
+  editingEvalId = null; lastAiEval = null;
   const resultDiv = document.getElementById('aiEvalResult');
   resultDiv.hidden = true;
   resultDiv.innerHTML = '';
@@ -702,13 +943,14 @@ function clearTranscript() {
 
 // ── Tabs ──
 function switchTab(t) {
-  ['sim','eval','hist','roteiro','sdrs'].forEach((id, i) => {
+  ['sim','eval','hist','roteiro','pratica','sdrs'].forEach((id, i) => {
     document.getElementById('tab-'+id).hidden = id !== t;
     document.querySelectorAll('.tab')[i].classList.toggle('active', id === t);
   });
   if (t === 'hist') renderHistory();
   if (t === 'sdrs') renderSDRList();
   if (t === 'roteiro') { renderScenarioTabs(); renderScriptList(); }
+  if (t === 'pratica') renderPratica();
   if (t === 'eval') populateAiEvalSdrSelector();
 }
 
@@ -786,6 +1028,21 @@ function endSession() {
   addMsg('system', `Sessão encerrada — ${stagesDone.size}/7 etapas. Clique em "Avaliação" para o feedback da IA.`);
 }
 
+// Alertas automáticos (heurística simples) nas 2 primeiras falas do SDR — regras do Estudo da Abertura
+const OPENING_RULES = [
+  { re: /(\bum\s+minut|\bdois\s+minut|\b[123]\s*minut|\bminutinh|\brapidinh|\btempinho|posso\s+falar|tem\s+um\s+tempo)/i,
+    msg: 'Pediu tempo logo no início. Abra com nome, energia e curiosidade; o pedido vem depois e é de curiosidade ("posso te contar?").' },
+  { re: /(vox\s?2\s?you|\bda\s+vox\b)/i,
+    msg: 'Disse de onde é a ligação cedo demais. Identifique-se pelo nome e por quem indicou; a empresa entra depois.' },
+  { re: /(workshop|consultoria|\bcurso\b|treinamento|escola\s+de\s+orat|maior\s+rede)/i,
+    msg: 'Falou do produto/serviço na abertura. O motivo da ligação é entender o problema da pessoa, sem dizer o que fazemos.' }
+];
+function checkOpening(text, sdrMsgCount) {
+  if (sdrMsgCount > 2) return;
+  const hits = OPENING_RULES.filter(r => r.re.test(text));
+  if (hits.length) addMsg('system', '⚠️ Alerta de abertura (Estudo da Abertura):\n' + hits.map(x => '• ' + x.msg).join('\n'));
+}
+
 async function sendMessage() {
   if (!sessionActive) return;
   const inp = document.getElementById('userInput');
@@ -797,6 +1054,7 @@ async function sendMessage() {
   const sdr = getSelectedSDR();
   addMsg('sdr', text, sdr.name);
   detectStages(text);
+  checkOpening(text, chatMessages.filter(m => m.role === 'user').length + 1);
   chatMessages.push({ role: 'user', content: `[SDR ${sdr.name}]: ${text}` });
 
   const loadId = addLoading();
@@ -831,7 +1089,8 @@ async function getFeedback() {
   const missing = STAGES.filter(s => !stagesDone.has(s.id)).map(s => s.name);
   document.getElementById('btnFeedback').disabled = true;
 
-  const prompt = `Avalie a sessão de treino do SDR ${sdr.name}:\nPontuação: ${stagesDone.size}/7\n✅ Concluídas: ${done.join(', ') || 'Nenhuma'}\n❌ Faltaram: ${missing.join(', ') || 'Nenhuma'}${sdr.weakPoints ? '\n\nPerfil do SDR: ' + sdr.weakPoints : ''}\n\nDê feedback direto em até 6 linhas.`;
+  const transcriptTxt = chatMessages.map(m => (m.role === 'user' ? '' : 'PROSPECT: ') + m.content).join('\n');
+  const prompt = `Avalie a sessão de treino do SDR ${sdr.name}:\nPontuação: ${stagesDone.size}/7\n✅ Concluídas: ${done.join(', ') || 'Nenhuma'}\n❌ Faltaram: ${missing.join(', ') || 'Nenhuma'}${sdr.weakPoints ? '\n\nPerfil do SDR: ' + sdr.weakPoints : ''}\n\nTRANSCRIÇÃO DA SIMULAÇÃO:\n${transcriptTxt}\n\nDê feedback direto em até 6 linhas, olhando primeiro para a abertura (regras do Estudo da Abertura).`;
 
   const loadId = addLoading('feedback');
   try {
@@ -955,17 +1214,20 @@ function renderHistory() {
   container.innerHTML = data.map(r => {
     const avg = parseFloat(r.avg);
     const cls = avg >= 2.5 ? 'green' : avg >= 1.5 ? 'yellow' : avg > 0 ? 'red' : 'gray';
-    const rb = r.result.includes('✅') ? 'green' : r.result.includes('📅') ? 'yellow' : 'gray';
+    const rb = String(r.result).includes('✅') ? 'green' : String(r.result).includes('📅') ? 'yellow' : 'gray';
+    const stg = r.stages || [];
+    const isDraft = r.status === 'rascunho';
     return `<div class="hist-card" onclick="showDetail(${r.id})">
       <div class="hist-header">
         <div><div class="hist-name">${escHtml(r.name)}</div><div class="hist-date">${r.date} · ${escHtml(r.prof || r.type)}</div></div>
-        <div class="hist-score">${r.avg}★</div>
+        <div class="hist-score">${isDraft ? '—' : r.avg + '★'}</div>
       </div>
       <div class="hist-badges">
         <span class="badge ${rb}">${escHtml(r.result)}</span>
-        <span class="badge ${cls}">Média ${r.avg}/3</span>
-        ${r.stages.filter(s=>s.stars===3).length ? `<span class="badge green">${r.stages.filter(s=>s.stars===3).length} excelentes</span>` : ''}
-        ${r.stages.filter(s=>s.stars===1).length ? `<span class="badge red">${r.stages.filter(s=>s.stars===1).length} a melhorar</span>` : ''}
+        ${isDraft ? '<span class="badge draft">Rascunho</span>' : `<span class="badge ${cls}">Média ${r.avg}/3</span>`}
+        ${stg.filter(s=>s.stars===3).length ? `<span class="badge green">${stg.filter(s=>s.stars===3).length} excelentes</span>` : ''}
+        ${stg.filter(s=>s.stars===1).length ? `<span class="badge red">${stg.filter(s=>s.stars===1).length} a melhorar</span>` : ''}
+        ${r.transcript ? '<span class="badge gray">com transcrição</span>' : ''}
       </div>
     </div>`;
   }).join('');
@@ -980,16 +1242,69 @@ function showDetail(id) {
   document.getElementById('modalContent').innerHTML = `
     <h2>${escHtml(r.name)}</h2>
     <p style="color:#6b7280;font-size:13px;margin-bottom:16px">${r.date} · ${escHtml(r.type)} · ${escHtml(r.result)}</p>
-    ${r.stages.map(s => `<div class="modal-stage">
+    ${(r.stages || []).map(s => `<div class="modal-stage">
       <span style="font-size:13px;font-weight:600">${s.name}</span>
       <div><span style="color:#f59e0b;font-size:16px">${star(s.stars)}</span>${s.note ? `<div class="modal-note">"${escHtml(s.note)}"</div>` : ''}</div>
     </div>`).join('')}
+    ${r.opening_check ? `<p style="margin-top:12px;font-size:13px;color:#374151"><strong>Abertura:</strong> ${r.opening_check.pediu_tempo_no_inicio ? '❌ pediu tempo' : '✅ não pediu tempo'} · ${r.opening_check.disse_empresa_no_inicio ? '❌ disse a empresa' : '✅ sem empresa'} · ${r.opening_check.falou_produto_no_inicio ? '❌ falou de produto' : '✅ sem produto'} · ${r.opening_check.gerou_curiosidade ? '✅ gerou curiosidade' : '❌ sem curiosidade'}</p>` : ''}
     ${r.obs ? `<p style="margin-top:14px;font-size:14px;color:#374151"><strong>Obs:</strong> ${escHtml(r.obs)}</p>` : ''}
+    ${r.transcript ? `<details class="hist-transcript"><summary>📄 Transcrição da ligação</summary><div>${escHtml(r.transcript)}</div></details>` : ''}
     <div class="modal-btns">
       <button class="btn btn-gray" onclick="closeModal()">Fechar</button>
+      <button class="btn btn-dark" onclick="editEval(${r.id})">✏️ Editar</button>
+      ${r.transcript ? `<button class="btn btn-primary" onclick="openEvalInEditor(${r.id})">🔍 ${r.status === 'rascunho' ? 'Avaliar com IA' : 'Reavaliar com IA'}</button>` : ''}
       <button class="btn btn-danger" onclick="deleteEval(${r.id})">Excluir</button>
     </div>`;
   document.getElementById('modalOverlay').hidden = false;
+}
+
+function editEval(id) {
+  const r = getEvals().find(x => x.id === id);
+  if (!r) return;
+  const results = ['Consultoria marcada ✅', 'Follow-up agendado 📅', 'Sem interesse ❌', 'Não atendeu 📵', 'Ligação incompleta ⚠️', '📝 Rascunho'];
+  if (r.result && !results.includes(r.result)) results.unshift(r.result);
+  const byId = {}; (r.stages || []).forEach(s => { byId[s.id] = s; });
+  document.getElementById('modalContent').innerHTML = `
+    <h2>✏️ Editar registro</h2>
+    <div class="field"><label>Prospect</label><input id="ee-name" type="text" value="${escHtml(r.name)}"></div>
+    <div class="field"><label>Resultado</label><select id="ee-result">${results.map(o => `<option ${o === r.result ? 'selected' : ''}>${escHtml(o)}</option>`).join('')}</select></div>
+    <div class="field"><label>Observações</label><textarea id="ee-obs">${escHtml(r.obs || '')}</textarea></div>
+    <div class="field"><label>Transcrição</label><textarea id="ee-transcript" style="min-height:140px">${escHtml(r.transcript || '')}</textarea></div>
+    <div style="font-size:12px;font-weight:700;color:#6b7280;margin:6px 0">Etapas</div>
+    ${STAGES.map(s => { const cur = byId[s.id] || {}; return `<div class="edit-row"><b>${escHtml(s.name)}</b>
+      <select id="ee-star-${s.id}">${[0,1,2,3].map(n => `<option value="${n}" ${(cur.stars || 0) === n ? 'selected' : ''}>${n === 0 ? '—' : '★'.repeat(n)}</option>`).join('')}</select>
+      <input type="text" id="ee-note-${s.id}" placeholder="Nota" value="${escHtml(cur.note || '')}"></div>`; }).join('')}
+    <div class="modal-btns">
+      <button class="btn btn-gray" onclick="showDetail(${r.id})">Cancelar</button>
+      <button class="btn btn-success" onclick="saveEvalEdit(${r.id})">💾 Salvar alterações</button>
+    </div>`;
+}
+
+function saveEvalEdit(id) {
+  const evals = getEvals();
+  const idx = evals.findIndex(x => x.id === id);
+  if (idx < 0) return;
+  const r = evals[idx];
+  const name = document.getElementById('ee-name').value.trim();
+  if (!name) { alert('Informe o nome do prospect.'); return; }
+  const stages = STAGES.map(s => ({
+    id: s.id, name: s.name,
+    stars: parseInt(document.getElementById('ee-star-' + s.id).value, 10) || 0,
+    note: document.getElementById('ee-note-' + s.id).value.trim()
+  }));
+  const rated = stages.filter(s => s.stars > 0);
+  r.name = name;
+  r.result = document.getElementById('ee-result').value;
+  r.obs = document.getElementById('ee-obs').value.trim();
+  r.transcript = document.getElementById('ee-transcript').value.trim();
+  if (rated.length || (r.stages && r.stages.length)) {
+    r.stages = stages;
+    r.avg = rated.length ? (rated.reduce((a, s) => a + s.stars, 0) / rated.length).toFixed(1) : '0.0';
+  }
+  r.status = r.result === '📝 Rascunho' ? 'rascunho' : (r.status === 'rascunho' ? 'avaliada' : r.status);
+  setEvals(evals);
+  renderHistory();
+  showDetail(id);
 }
 
 function closeModal(e) {
@@ -1022,16 +1337,17 @@ function selectScenario(id) {
 }
 
 function renderScriptList() {
-  const scripts = getScripts().filter(s => s.scenarioId === currentScenario);
+  const scripts = getScripts().filter(s => s.scenarioId === currentScenario)
+    .sort((a, b) => (a.status === 'legado') - (b.status === 'legado'));
   const list = document.getElementById('scriptList');
   if (!scripts.length) {
     list.innerHTML = '<div class="empty-scripts">Nenhum roteiro para este cenário.<br>Clique em <strong>+ Novo Roteiro</strong> para criar.</div>';
     return;
   }
   list.innerHTML = scripts.map(s =>
-    `<div class="script-item">
+    `<div class="script-item ${s.status === 'legado' ? 'legado' : ''}">
       <div class="script-item-left">
-        <span class="script-badge ${s.status}">${s.status === 'aprovado' ? '✅ Aprovado' : '📝 Rascunho'}</span>
+        <span class="script-badge ${s.status}">${s.status === 'aprovado' ? '✅ Aprovado' : s.status === 'legado' ? '🗄️ Antigo' : '📝 Rascunho'}</span>
         <span class="script-title">${escHtml(s.title)}</span>
       </div>
       <div class="script-item-actions">
@@ -1091,6 +1407,69 @@ function deleteScript(id) {
 function cancelScriptEdit() {
   editingScriptId = null;
   document.getElementById('scriptEditorPanel').hidden = true;
+}
+
+// ── PRÁTICA (Estudo da Abertura) ──
+const PR_RULES = [
+  'Não começar pedindo tempo. A curiosidade vem antes do pedido.',
+  'Não dizer de onde é a ligação. A empresa só aparece depois.',
+  'Não falar de produto, workshop ou consultoria no início.',
+  'O motivo da ligação é entender o problema da pessoa, sem dizer o que fazemos.',
+  'Falar com a pessoa (CPF), não com a empresa (CNPJ): estudo do lead antes de discar.',
+  'Perguntou "o [fulano] te falou que eu ia ligar?" — pare e espere a resposta.',
+  'Pessoa ocupada: não adiante o assunto. Mantenha a curiosidade e combine o retorno.'
+];
+
+const PR_CHECKLIST = [
+  'Respirei um ciclo (4 segundos inspira, 2 segura, 6 solta)',
+  'Estou sorrindo e com foco só nesta ligação',
+  'Li a ficha do lead: quem indicou, o que foi dito, qual pergunta vou fazer',
+  'Sei qual modelo de abertura vou usar',
+  'Não vou pedir tempo, citar a empresa nem falar de produto',
+  'Vou perguntar e esperar a resposta'
+];
+
+const PR_EXERCISES = [
+  { t: '1. Diagnóstico de linha base', d: 'Grave três ligações reais e ouça pensando só em três perguntas:\n• Pedi tempo ou citei a empresa nos primeiros segundos?\n• O tom desce nas afirmações?\n• Esperei a resposta depois da pergunta de indicação?\nAnote sem se julgar: é o ponto de partida.' },
+  { t: '2. Tom e energia', d: 'Grave a primeira frase em voz alta, sorrindo, e ouça só o tom, ignorando as palavras.\nFrase de treino: "[Nome]! Tudo bem com você? Eu sou [seu nome]."\nDiga dez vezes, variando a altura da voz de propósito. Na décima, deve soar natural.' },
+  { t: '3. A pausa de três segundos', d: 'No role-play, faça a pergunta "o [fulano] te falou que eu ia ligar?" e conte três segundos em silêncio antes de qualquer palavra. Repita até a pausa não gerar ansiedade.' },
+  { t: '4. Role-play com inversão de papel', d: 'Uma pessoa faz a abertura, a outra é o prospect e dá feedback logo em seguida. Depois invertem.\nCinco rodadas por sessão, um único foco por rodada (energia, pausa, tom ou curiosidade). Use a aba Simulação para treinar sozinho(a).' },
+  { t: '5. Treino do "estou ocupado"', d: 'Quem faz o prospect responde sempre "estou ocupado". O SDR mantém a curiosidade e combina o horário de retorno, sem explicar o assunto, até soar leve e sem pressa. Use o tipo Ocupado na aba Simulação.' },
+  { t: '6. Variação controlada dos modelos', d: 'Escolha 3 modelos de abertura (aba Roteiros). Durante uma semana use só esses 3, alternando. Na semana seguinte compare: qual gerou mais conversa? Qual converteu mais em agendamento? Em qual você soou mais natural? O melhor é o seu modelo base.' }
+];
+
+function getChecklistState() {
+  try { return JSON.parse(localStorage.getItem('vox_checklist') || '{}'); } catch { return {}; }
+}
+function toggleChecklist(i) {
+  const st = getChecklistState();
+  st[i] = !st[i];
+  try { localStorage.setItem('vox_checklist', JSON.stringify(st)); } catch {}
+}
+function resetChecklist() {
+  try { localStorage.removeItem('vox_checklist'); } catch {}
+  renderPratica();
+}
+
+function renderPratica() {
+  const st = getChecklistState();
+  document.getElementById('praticaContainer').innerHTML = `
+    <div class="pr-card">
+      <h3>🎯 Regras da abertura</h3>
+      <div class="pr-sub">Do Estudo da Abertura da Vox2You. Valem para qualquer modelo de abertura.</div>
+      ${PR_RULES.map((r, i) => `<div class="pr-rule"><b>${i + 1}</b><span>${escHtml(r)}</span></div>`).join('')}
+    </div>
+    <div class="pr-card">
+      <h3>✅ Checklist pré-ligação</h3>
+      <div class="pr-sub">30 segundos antes de discar.</div>
+      ${PR_CHECKLIST.map((c, i) => `<label class="pr-check"><input type="checkbox" ${st[i] ? 'checked' : ''} onchange="toggleChecklist(${i})"><span>${escHtml(c)}</span></label>`).join('')}
+      <button class="btn btn-gray btn-sm" style="margin-top:10px" onclick="resetChecklist()">Limpar checklist</button>
+    </div>
+    <div class="pr-card">
+      <h3>🏋️ Exercícios de prática</h3>
+      <div class="pr-sub">Um foco por vez. Repetição deliberada, com feedback a cada ciclo.</div>
+      ${PR_EXERCISES.map(e => `<details class="pr-ex"><summary>${escHtml(e.t)}</summary><div>${escHtml(e.d)}</div></details>`).join('')}
+    </div>`;
 }
 
 // ── SDRs ──
