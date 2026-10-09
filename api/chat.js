@@ -192,13 +192,15 @@ module.exports = async (req, res) => {
       });
 
       const raw = response.content[0].text.trim();
-      try {
-        const parsed = JSON.parse(raw);
-        return res.json({ evaluation: parsed });
-      } catch {
-        // fallback: return raw text if JSON parse fails
-        return res.json({ content: raw });
+      // O modelo às vezes envolve o JSON em ```json ... ```: extrai do primeiro { ao último }
+      let parsed = null;
+      try { parsed = JSON.parse(raw); } catch {
+        const s = raw.indexOf('{'), e = raw.lastIndexOf('}');
+        if (s > -1 && e > s) { try { parsed = JSON.parse(raw.slice(s, e + 1)); } catch {} }
       }
+      if (parsed) return res.json({ evaluation: parsed });
+      // fallback: devolve o texto bruto se não for possível ler o JSON
+      return res.json({ content: raw });
     } else {
       return res.status(400).json({ error: 'Modo inválido' });
     }
